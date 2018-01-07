@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>健康風險-天氣與精神異常</title>
+<meta name="description" content="try to work this out.......">
+<meta name="generator" content="Hugo 0.32.2" />
+<meta property="og:title" content="健康風險-天氣與精神異常" />
+<meta property="og:description" content="1.簡介本研究主要欲探討的議題為氣象狀況對精神相關疾病之影響。
+目前取得因精神異常以致使用緊急醫療救護系統之資料。
+研究設定新北市為主要研究區域，時間為2006-2013年。
+並使用中央氣象局局屬測站板橋站資天氣時資料，其中包含：氣壓、溫度、濕度、風速、日照時數。
+本篇為個人研究成果，無公開、未發表
+2.研究方法2.1長期暴露分析使用日資料
+探討累積累積30天之劑量-延遲-反應病例交叉模型
+主要探討影響因子包含：日平均氣壓、日平均溫度、日最低溫度、日最高溫度、日溫差、日平均濕度、日平均風速、日總日照時間
+調整之因子包含：長期趨勢、周次日期
+將個別探討主要影響標的影響情形，即一次僅使用一種氣象參數
+2.2短期暴露分析使用時資料
+探討累積48天小時之劑量-延遲-反應病例交叉模型
+主要探討影響因子包含：時溫度
+調整之因子包含：長期趨勢、周次日期、時濕度、時風速
+2.3模型參數設定使用非線性遞延廣義線性模式(Distributed Lag Non-Linear Models)
+利用氣象參數，設定以的二次雲行線(nature cubic spline)擬合的時間-變量二維矩陣。
+延遲時間與氣象因子二次雲行線的參數設置如：自由度(df)、節點(knots)設置方式首先考量過去文獻、過去經驗、利用赤池信息指標(Akaike information criterion)選出較配適度較高的組合。
+延遲時間有短期：48小時(時資料)、長期：30天(日資料)兩種，主要考量來自過去文獻提出，在長期趨勢中，極端高溫影響主要集中於前七天，極端低溫的影響則在21天後；而短期暴露的延遲效應較少人提出，需要考證。
+長期趨勢的調整因子，也利用雲行線設定，因總研究時間為8年，總共設置10*8個自由度，參考自過去文獻。
+周次日期為類別變數之調整因子；以周一最為參考點。不另外使用節日、流感住院人數為調整因子。
+短期暴露分析中添加每小時溫度與風速為調整因子，使用自由度為四之雲行線擬合。
+長期暴露分析中一次只討論一個氣象因子，不考慮兩個氣象因子的模式與交互作用。
+顯著風險增幅判定是當相對風險(RR)與他的95%信賴區間都大於1。保護效果則是皆小於一。
+無論何種暴露方式，都使用「累積相對風險」與「特定溫度、時間之相對風險」來觀察時間、主要氣象因子對因精神異常使用救護系統人數之風險。其目的是因為，累積相對風險可以針對總風險進行描述，但沒有詳細說明不同時間、變量的單位風險，當某一因子僅在特定時間點出現風險，總風險不一定會有顯著，因此才會利用特定溫度、時間之相對風險進行描述。
+3.研究成果3.1敘述性統計3.1.1日資料Table.1 Summary table - Daily variableVariableSampleBasic indexPercentilesNamesMethodTotal SizeZeroMissingSumMeanStandard DeviationMinimumMaximum25th50th75thPatientsSum255750202467." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/post/2018-01-07-health.risk.mental.issue.weather/" />
+
+
+
+<meta property="article:published_time" content="2018-01-07T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2018-01-07T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+<link rel="dns-prefetch" href="//fonts.gstatic.com" />
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700" type="text/css" media="all" />
+<link rel="stylesheet" href="/css/style.css" type="text/css" media="all" />
+<script type="text/javascript" src="/js/scripts.js"></script>
+<link rel="shortcut icon" href="/favicon.ico">
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-112058330-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body class="body body-right-sidebar mobile" itemscope="itemscope" itemtype="http://schema.org/WebPage">
+	<div class="container container-outer">
+		<header class="header" itemscope="itemscope" itemtype="http://schema.org/WPHeader">
+			<div class="container container-inner clearfix">
+				<div class="logo" role="banner" itemscope="itemscope" itemtype="http://schema.org/Brand">
+					<a class="logo__link" href="/" title="魚缸" rel="home">
+						<h1 class="logo__title">魚缸</h1>
+						<h2 class="logo__tagline">fish site</h2>
+					</a>
+				</div>
+			</div>
+			
+<nav class="menu" itemscope="itemscope" itemtype="http://schema.org/SiteNavigationElement">
+	<ul class="menu__list">
+		<li class="menu__item"><a class="menu__link" href="/about/">ABOUT HUGO</a></li>
+	</ul>
+</nav>
+
+		</header>
+		<div class="wrapper clearfix">
+
+<main class="main-content content" role="main" itemprop="mainContentOfPage">
+	<article class="post">
+		<header class="post__header clearfix">
+			<h1 class="post__title">健康風險-天氣與精神異常</h1>
+			<p class="post__meta meta">
+				<svg class="icon icon-time" height="14" viewBox="0 0 16 16" width="14" xmlns="http://www.w3.org/2000/svg"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+				<time class="post__meta-date" datetime="2018-01-07T00:00:00">January 07, 2018</time>
+				<span class="post__meta-categories meta-categories">
+					<svg class="icon icon-category" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+					<a class="meta-categories__link" href="/categories/reserch" rel="category">Reserch</a></span>
+			</p>
+		</header>
+		<div class="post__content clearfix">
+			<div class="section level1">
+<h1>1.簡介</h1>
+<p>本研究主要欲探討的議題為氣象狀況對精神相關疾病之影響。</p>
+<p>目前取得因精神異常以致使用緊急醫療救護系統之資料。</p>
+<p>研究設定新北市為主要研究區域，時間為2006-2013年。</p>
+<p>並使用中央氣象局局屬測站板橋站資天氣時資料，其中包含：氣壓、溫度、濕度、風速、日照時數。</p>
+<p><strong>本篇為個人研究成果，無公開、未發表</strong></p>
+</div>
+<div class="section level1">
+<h1>2.研究方法</h1>
+<div class="section level2">
+<h2>2.1長期暴露分析</h2>
+<ul>
+<li><p>使用日資料</p></li>
+<li><p>探討累積累積30天之<strong>劑量-延遲-反應</strong>病例交叉模型</p></li>
+<li><p>主要探討影響因子包含：日平均氣壓、日平均溫度、日最低溫度、日最高溫度、日溫差、日平均濕度、日平均風速、日總日照時間</p></li>
+<li><p>調整之因子包含：長期趨勢、周次日期</p></li>
+<li><p>將個別探討主要影響標的影響情形，即一次僅使用一種氣象參數</p></li>
+</ul>
+</div>
+<div class="section level2">
+<h2>2.2短期暴露分析</h2>
+<ul>
+<li><p>使用時資料</p></li>
+<li><p>探討累積48天小時之<strong>劑量-延遲-反應</strong>病例交叉模型</p></li>
+<li><p>主要探討影響因子包含：時溫度</p></li>
+<li><p>調整之因子包含：長期趨勢、周次日期、時濕度、時風速</p></li>
+</ul>
+</div>
+<div class="section level2">
+<h2>2.3模型參數設定</h2>
+<ul>
+<li><p>使用非線性遞延廣義線性模式(Distributed Lag Non-Linear Models)</p></li>
+<li><p>利用氣象參數，設定以的二次雲行線(nature cubic spline)擬合的時間-變量二維矩陣。</p></li>
+<li><p>延遲時間與氣象因子二次雲行線的參數設置如：自由度(df)、節點(knots)設置方式首先考量過去文獻、過去經驗、利用赤池信息指標(Akaike information criterion)選出較配適度較高的組合。</p></li>
+<li><p>延遲時間有短期：48小時(時資料)、長期：30天(日資料)兩種，主要考量來自過去文獻提出，在長期趨勢中，極端高溫影響主要集中於前七天，極端低溫的影響則在21天後；而短期暴露的延遲效應較少人提出，需要考證。</p></li>
+<li><p>長期趨勢的調整因子，也利用雲行線設定，因總研究時間為8年，總共設置10*8個自由度，參考自過去文獻。</p></li>
+<li><p>周次日期為類別變數之調整因子；以周一最為參考點。不另外使用節日、流感住院人數為調整因子。</p></li>
+<li><p>短期暴露分析中添加每小時溫度與風速為調整因子，使用自由度為四之雲行線擬合。</p></li>
+<li><p>長期暴露分析中一次只討論一個氣象因子，不考慮兩個氣象因子的模式與交互作用。</p></li>
+<li><p>顯著風險增幅判定是當相對風險(RR)與他的95%信賴區間都大於1。保護效果則是皆小於一。</p></li>
+<li><p>無論何種暴露方式，都使用「累積相對風險」與「特定溫度、時間之相對風險」來觀察時間、主要氣象因子對因精神異常使用救護系統人數之風險。其目的是因為，累積相對風險可以針對總風險進行描述，但沒有詳細說明不同時間、變量的單位風險，當某一因子僅在特定時間點出現風險，總風險不一定會有顯著，因此才會利用特定溫度、時間之相對風險進行描述。</p></li>
+</ul>
+</div>
+</div>
+<div class="section level1">
+<h1>3.研究成果</h1>
+<div class="section level2">
+<h2>3.1敘述性統計</h2>
+<div class="section level3">
+<h3>3.1.1日資料</h3>
+<div id="table.1-summary-table---daily-variable" class="section level6">
+<h6>Table.1 Summary table - Daily variable</h6>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Variable
+</div>
+</th>
+<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="3">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Sample
+</div>
+</th>
+<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="5">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Basic index
+</div>
+</th>
+<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="3">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Percentiles
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+Names
+</th>
+<th style="text-align:left;">
+Method
+</th>
+<th style="text-align:right;">
+Total Size
+</th>
+<th style="text-align:right;">
+Zero
+</th>
+<th style="text-align:right;">
+Missing
+</th>
+<th style="text-align:left;">
+Sum
+</th>
+<th style="text-align:left;">
+Mean
+</th>
+<th style="text-align:left;">
+Standard Deviation
+</th>
+<th style="text-align:left;">
+Minimum
+</th>
+<th style="text-align:left;">
+Maximum
+</th>
+<th style="text-align:left;">
+25th
+</th>
+<th style="text-align:left;">
+50th
+</th>
+<th style="text-align:left;">
+75th
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Patients
+</td>
+<td style="text-align:left;">
+Sum
+</td>
+<td style="text-align:right;">
+2557
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+20246
+</td>
+<td style="text-align:left;">
+7.92
+</td>
+<td style="text-align:left;">
+3.41
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+25
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pressure (hpa)
+</td>
+<td style="text-align:left;">
+Mean
+</td>
+<td style="text-align:right;">
+2557
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+2587512
+</td>
+<td style="text-align:left;">
+1012
+</td>
+<td style="text-align:left;">
+6.74
+</td>
+<td style="text-align:left;">
+971
+</td>
+<td style="text-align:left;">
+1032
+</td>
+<td style="text-align:left;">
+1007
+</td>
+<td style="text-align:left;">
+1012
+</td>
+<td style="text-align:left;">
+1017
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Temperature (C)
+</td>
+<td style="text-align:left;">
+Mean
+</td>
+<td style="text-align:right;">
+2557
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+58873
+</td>
+<td style="text-align:left;">
+23
+</td>
+<td style="text-align:left;">
+5.37
+</td>
+<td style="text-align:left;">
+8.39
+</td>
+<td style="text-align:left;">
+32.1
+</td>
+<td style="text-align:left;">
+18.9
+</td>
+<td style="text-align:left;">
+23.6
+</td>
+<td style="text-align:left;">
+27.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Temperature (C)
+</td>
+<td style="text-align:left;">
+Minimum
+</td>
+<td style="text-align:right;">
+2557
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+51678
+</td>
+<td style="text-align:left;">
+20.2
+</td>
+<td style="text-align:left;">
+5.03
+</td>
+<td style="text-align:left;">
+5.5
+</td>
+<td style="text-align:left;">
+29.8
+</td>
+<td style="text-align:left;">
+16.2
+</td>
+<td style="text-align:left;">
+20.8
+</td>
+<td style="text-align:left;">
+24.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Temperature (C)
+</td>
+<td style="text-align:left;">
+Maximum
+</td>
+<td style="text-align:right;">
+2557
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+68060
+</td>
+<td style="text-align:left;">
+26.6
+</td>
+<td style="text-align:left;">
+6.3
+</td>
+<td style="text-align:left;">
+9.4
+</td>
+<td style="text-align:left;">
+38.1
+</td>
+<td style="text-align:left;">
+22.1
+</td>
+<td style="text-align:left;">
+27.2
+</td>
+<td style="text-align:left;">
+32.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Temperature
+</td>
+<td style="text-align:left;">
+Differ
+</td>
+<td style="text-align:right;">
+2557
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+16382
+</td>
+<td style="text-align:left;">
+6.41
+</td>
+<td style="text-align:left;">
+2.97
+</td>
+<td style="text-align:left;">
+0.6
+</td>
+<td style="text-align:left;">
+18.4
+</td>
+<td style="text-align:left;">
+3.9
+</td>
+<td style="text-align:left;">
+6.5
+</td>
+<td style="text-align:left;">
+8.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Relative humidity (%)
+</td>
+<td style="text-align:left;">
+Mean
+</td>
+<td style="text-align:right;">
+2557
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+191838
+</td>
+<td style="text-align:left;">
+75
+</td>
+<td style="text-align:left;">
+7.77
+</td>
+<td style="text-align:left;">
+39.6
+</td>
+<td style="text-align:left;">
+97
+</td>
+<td style="text-align:left;">
+69.5
+</td>
+<td style="text-align:left;">
+75.2
+</td>
+<td style="text-align:left;">
+80.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wind speed (m/s)
+</td>
+<td style="text-align:left;">
+Mean
+</td>
+<td style="text-align:right;">
+2557
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+5660
+</td>
+<td style="text-align:left;">
+2.21
+</td>
+<td style="text-align:left;">
+1.19
+</td>
+<td style="text-align:left;">
+0.13
+</td>
+<td style="text-align:left;">
+6.91
+</td>
+<td style="text-align:left;">
+1.2
+</td>
+<td style="text-align:left;">
+2.01
+</td>
+<td style="text-align:left;">
+3.17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sun shine (hour)
+</td>
+<td style="text-align:left;">
+Sum
+</td>
+<td style="text-align:right;">
+2557
+</td>
+<td style="text-align:right;">
+631
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+10715
+</td>
+<td style="text-align:left;">
+4.19
+</td>
+<td style="text-align:left;">
+3.9
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+13.1
+</td>
+<td style="text-align:left;">
+0.1
+</td>
+<td style="text-align:left;">
+3.7
+</td>
+<td style="text-align:left;">
+7.5
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="figure.1-trend-plot---daily-variable" class="section level6">
+<h6>Figure.1 Trend plot - Daily variable</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.1.1.plot.variable.trend-1.png" width="2100" /></p>
+</div>
+<div id="figure.2-boxplot---daily-variable" class="section level6">
+<h6>Figure.2 Boxplot - Daily variable</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.1.1.boxplot.variable.trend-1.png" width="2100" /></p>
+</div>
+</div>
+<div class="section level3">
+<h3>3.1.2小時資料</h3>
+<div id="table.2-summary-table---hourly-variable" class="section level6">
+<h6>Table.2 Summary table - Hourly variable</h6>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="1">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Variable
+</div>
+</th>
+<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="3">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Sample
+</div>
+</th>
+<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="5">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Basic index
+</div>
+</th>
+<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="3">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Percentiles
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+Names
+</th>
+<th style="text-align:right;">
+Total Size
+</th>
+<th style="text-align:right;">
+Zero
+</th>
+<th style="text-align:left;">
+Missing
+</th>
+<th style="text-align:left;">
+Sum
+</th>
+<th style="text-align:left;">
+Mean
+</th>
+<th style="text-align:left;">
+Standard Deviation
+</th>
+<th style="text-align:left;">
+Minimum
+</th>
+<th style="text-align:left;">
+Maximum
+</th>
+<th style="text-align:left;">
+25th
+</th>
+<th style="text-align:left;">
+50th
+</th>
+<th style="text-align:right;">
+75th
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Patients
+</td>
+<td style="text-align:right;">
+61368
+</td>
+<td style="text-align:right;">
+44592
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+20246
+</td>
+<td style="text-align:left;">
+0.33
+</td>
+<td style="text-align:left;">
+0.59
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pressure (hpa)
+</td>
+<td style="text-align:right;">
+61368
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+62100293
+</td>
+<td style="text-align:left;">
+1012
+</td>
+<td style="text-align:left;">
+6.86
+</td>
+<td style="text-align:left;">
+968
+</td>
+<td style="text-align:left;">
+1033
+</td>
+<td style="text-align:left;">
+1007
+</td>
+<td style="text-align:left;">
+1012
+</td>
+<td style="text-align:right;">
+1016.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Temperature (C)
+</td>
+<td style="text-align:right;">
+61368
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+1412947
+</td>
+<td style="text-align:left;">
+23
+</td>
+<td style="text-align:left;">
+5.82
+</td>
+<td style="text-align:left;">
+5.5
+</td>
+<td style="text-align:left;">
+38.1
+</td>
+<td style="text-align:left;">
+18.5
+</td>
+<td style="text-align:left;">
+23.5
+</td>
+<td style="text-align:right;">
+27.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Relative humidity (%)
+</td>
+<td style="text-align:right;">
+61368
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+4604101
+</td>
+<td style="text-align:left;">
+75
+</td>
+<td style="text-align:left;">
+10.5
+</td>
+<td style="text-align:left;">
+21
+</td>
+<td style="text-align:left;">
+100
+</td>
+<td style="text-align:left;">
+67
+</td>
+<td style="text-align:left;">
+76
+</td>
+<td style="text-align:right;">
+83.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wind speed (m/s)
+</td>
+<td style="text-align:right;">
+61368
+</td>
+<td style="text-align:right;">
+4299
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+135842
+</td>
+<td style="text-align:left;">
+2.21
+</td>
+<td style="text-align:left;">
+1.64
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+11.9
+</td>
+<td style="text-align:left;">
+0.7
+</td>
+<td style="text-align:left;">
+2.1
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sun shine (hour)
+</td>
+<td style="text-align:right;">
+61368
+</td>
+<td style="text-align:right;">
+45510
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+10715
+</td>
+<td style="text-align:left;">
+0.17
+</td>
+<td style="text-align:left;">
+0.34
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section level3">
+<h3>3.1.3各類因子與使用救護系統人數分布</h3>
+<div class="section level4">
+<h4>3.1.3.1時間</h4>
+<div id="figure.3-annually-trend-of-patients" class="section level6">
+<h6>Figure.3 Annually trend of patients</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.1.3.1.Annually.line.cahrt-1.png" width="2100" /></p>
+</div>
+<div id="figure.4-annually-patients-number-in-each-months" class="section level6">
+<h6>Figure.4 Annually patients number in each months</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.1.3.1.barchart.month-1.png" width="2100" /></p>
+</div>
+<div id="figure.5-box-plot-for-patients-number-in-day-of-week" class="section level6">
+<h6>Figure.5 Box plot for Patients number in day of week</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.1.3.1.boxplot.dow-1.png" width="2100" /></p>
+</div>
+</div>
+<div class="section level4">
+<h4>3.1.3.2氣象因子</h4>
+<div id="figure.6-bar-plot---cases-in-temperature" class="section level6">
+<h6>Figure.6 Bar plot - Cases in temperature</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.1.3.2.Case.in,each.temperature-1.png" width="2100" /></p>
+</div>
+<div id="figure.7-contour-plot---cases-in-relative-humidity" class="section level6">
+<h6>Figure.7 Contour plot - Cases in relative humidity</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.1.3.2.Case.in,each.relative.humidity-1.png" width="2100" /></p>
+</div>
+<div id="figure.8-contour-plot---cases-in-temperature-and-relative-humidity" class="section level6">
+<h6>Figure.8 Contour plot - Cases in temperature and relative humidity</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.1.3.2.Annually.line.cahrt-1.png" width="2100" /></p>
+</div>
+<div id="figure.9-point-distrebuted---temperature-and-pressure" class="section level6">
+<h6>Figure.9 Point distrebuted - Temperature and Pressure</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.1.3.2.point.temp.ps-1.png" width="2100" /></p>
+</div>
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2>3.2氣象因子風險模型</h2>
+<div class="section level3">
+<h3>3.2.1長期暴露</h3>
+<div class="section level4">
+<h4>3.2.1.1日平均氣壓</h4>
+<div id="figure.10-significant-cumulative-relative-risk-of-long-term-daily-mean-ambient-pressure-exposures-on-lag-30-days." class="section level6">
+<h6>Figure.10 Significant cumulative relative risk of long-term daily mean ambient pressure exposures on lag 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.1.RR.overall-1.png" width="2100" /></p>
+<p><strong>僅呈現有顯著之風險</strong></p>
+</div>
+<div id="figure.11-significant-cumulative-and-specific-relative-risk-of-long-term-daily-mean-ambient-pressure-exposures-on-lag-0-to-30-days." class="section level6">
+<h6>Figure.11 Significant cumulative and specific relative risk of long-term daily mean ambient pressure exposures on lag 0 to 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.1.RR.countour-1.png" width="2100" /></p>
+</div>
+</div>
+<div class="section level4">
+<h4>3.2.1.2氣溫</h4>
+<div class="section level5">
+<h5>3.2.1.2.1日平均氣溫</h5>
+<div id="figure.12-significant-cumulative-relative-risk-of-long-term-daily-mean-temperature-exposures-on-lag-30-days." class="section level6">
+<h6>Figure.12 Significant cumulative relative risk of long-term daily mean temperature exposures on lag 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.2.1.RR.overall-1.png" width="2100" /></p>
+<p><strong>僅呈現有顯著之風險</strong></p>
+</div>
+<div id="figure.13-significant-cumulative-and-specific-relative-risk-of-long-term-daily-mean-temperature-exposures-on-lag-0-to-30-days." class="section level6">
+<h6>Figure.13 Significant cumulative and specific relative risk of long-term daily mean temperature exposures on lag 0 to 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.2.1.RR.countour-1.png" width="2100" /></p>
+</div>
+</div>
+<div class="section level5">
+<h5>3.2.1.2.2日最低氣溫</h5>
+<div id="figure.14-significant-cumulative-relative-risk-of-long-term-daily-minimum-temperature-exposures-on-lag-30-days." class="section level6">
+<h6>Figure.14 Significant cumulative relative risk of long-term daily minimum temperature exposures on lag 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.2.2.RR.overall-1.png" width="2100" /></p>
+<p><strong>僅呈現有顯著之風險</strong></p>
+</div>
+<div id="figure.15-contour---significant-cumulative-and-specific-relative-risk-of-long-term-daily-minimum-temperature-exposures-on-lag-0-to-30-days." class="section level6">
+<h6>Figure.15 Contour - Significant cumulative and specific relative risk of long-term daily minimum temperature exposures on lag 0 to 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.2.2.RR.countour-1.png" width="2100" /></p>
+</div>
+</div>
+<div class="section level5">
+<h5>3.2.1.2.3日最高氣溫</h5>
+<div id="figure.16-significant-cumulative-relative-risk-of-long-term-daily-maximum-temperature-exposures-on-lag-30-days." class="section level6">
+<h6>Figure.16 Significant cumulative relative risk of long-term daily maximum temperature exposures on lag 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.2.3.RR.overall-1.png" width="2100" /></p>
+<p><strong>僅呈現有顯著之風險</strong></p>
+</div>
+<div id="figure.17-significant-cumulative-and-specific-relative-risk-of-long-term-daily-maximum-temperature-exposures-on-lag-0-to-30-days." class="section level6">
+<h6>Figure.17 Significant cumulative and specific relative risk of long-term daily maximum temperature exposures on lag 0 to 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.2.3.RR.countour-1.png" width="2100" /></p>
+</div>
+</div>
+<div class="section level5">
+<h5>3.2.1.2.4日溫差</h5>
+<div id="figure.18-significant-cumulative-relative-risk-of-long-term-diurnal-temperature-range-exposures-on-lag-30-days." class="section level6">
+<h6>Figure.18 Significant cumulative relative risk of long-term diurnal temperature range exposures on lag 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.2.4.RR.overall-1.png" width="2100" /></p>
+<p><strong>下圖均不顯著</strong></p>
+</div>
+<div id="figure.19-cumulative-and-specific-relative-risk-of-long-term-diurnal-temperature-range-exposures-on-lag-0-to-30-days." class="section level6">
+<h6>Figure.19 Cumulative and specific relative risk of long-term diurnal temperature range exposures on lag 0 to 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.2.4.RR.countour-1.png" width="2100" /></p>
+</div>
+</div>
+</div>
+<div class="section level4">
+<h4>3.2.1.3日平均濕度</h4>
+<div id="figure.20-significant-cumulative-relative-risk-of-long-term-mean-relative-humidity-exposures-on-lag-30-days." class="section level6">
+<h6>Figure.20 Significant cumulative relative risk of long-term mean relative humidity exposures on lag 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.3.RR.overall-1.png" width="2100" /></p>
+<p><strong>僅呈現有顯著之風險</strong></p>
+</div>
+<div id="figure.21-significant-cumulative-and-specific-relative-risk-of-long-term-mean-relative-humidity-exposures-on-lag-0-to-30-days." class="section level6">
+<h6>Figure.21 Significant cumulative and specific relative risk of long-term mean relative humidity exposures on lag 0 to 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.3.RR.countour-1.png" width="2100" /></p>
+</div>
+</div>
+<div class="section level4">
+<h4>3.2.1.4日平均風速</h4>
+<div id="figure.22-significant-cumulative-relative-risk-of-long-term-mean-wind-speed-exposures-on-lag-30-days." class="section level6">
+<h6>Figure.22 Significant cumulative relative risk of long-term mean wind speed exposures on lag 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.4.RR.overall-1.png" width="2100" /></p>
+<p><strong>下圖均不顯著</strong></p>
+</div>
+<div id="figure.23-cumulative-and-specific-relative-risk-of-long-term-mean-wind-speed-exposures-on-lag-0-to-30-days." class="section level6">
+<h6>Figure.23 Cumulative and specific relative risk of long-term mean wind speed exposures on lag 0 to 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.4.RR.countour-1.png" width="2100" /></p>
+</div>
+</div>
+<div class="section level4">
+<h4>3.2.1.5日總日照時間</h4>
+<div id="figure.24-significant-cumulative-relative-risk-of-long-term-total-sunshine-hour-exposures-on-lag-30-days." class="section level6">
+<h6>Figure.24 Significant cumulative relative risk of long-term total sunshine hour exposures on lag 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.5.RR.overall-1.png" width="2100" /></p>
+<p><strong>下圖均不顯著</strong></p>
+</div>
+<div id="figure.25-cumulative-and-specific-relative-risk-of-long-term-total-sunshine-hour-exposures-on-lag-0-to-30-days." class="section level6">
+<h6>Figure.25 Cumulative and specific relative risk of long-term total sunshine hour exposures on lag 0 to 30 days.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.1.5.RR.countour-1.png" width="2100" /></p>
+</div>
+</div>
+</div>
+<div class="section level3">
+<h3>3.2.2短期暴露</h3>
+<div id="figure.26-significant-cumulative-relative-risk-of-short-term-hourly-temperature-exposures-on-lag-48-hours." class="section level6">
+<h6>Figure.26 Significant cumulative relative risk of short-term hourly temperature exposures on lag 48 hours.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.2.RR.overall-1.png" width="2100" /></p>
+<p><strong>僅呈現有顯著之風險</strong></p>
+</div>
+<div id="figure.27-significant-cumulative-and-specific-relative-risk-of-short-term-daily-hourly-temperature-exposures-on-lag-0-to-48-hours." class="section level6">
+<h6>Figure.27 Significant cumulative and specific relative risk of short-term daily hourly temperature exposures on lag 0 to 48 hours.</h6>
+<p><img src="/post/2018-01-07-health.risk.mental.issue.weather_files/figure-html/3.2.2.RR.countour-1.png" width="2100" /></p>
+</div>
+</div>
+</div>
+</div>
+
+		</div>
+		
+<div class="post__tags tags clearfix">
+	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="m4.73135 3.3795002q0-.5597-.39604-.9557-.39604-.3961-.95577-.3961-.55974 0-.95578.3961-.39604.396-.39604.9557 0 .5598.39604.9558.39604.3961.95578.3961.55973 0 .95577-.3961.39604-.396.39604-.9558zm11.26865 6.0832q0 .5596998-.39076.9504998l-5.18548 5.196q-.41188.3908-.9610504.3908-.55974 0-.9505-.3908l-7.5511496-7.5616998q-.40132-.3907-.68119-1.0666-.27987-.6759-.27987-1.2357v-4.3934q0-.54920004.40132-.95050004.40132-.4013.9505-.4013h4.39339q.55974 0 1.23565.2799.67591.2798 1.07723.6812l7.55115 7.54060004q.39076.4118.39076.961z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item"><a class="tags__link" href="/tags/dlnm/" rel="tag">dlnm</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/health-risk-assessment/" rel="tag">health risk assessment</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/mental-issue/" rel="tag">mental issue</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/weather-effect/" rel="tag">weather effect</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/%E9%9D%9E%E7%B7%9A%E6%80%A7%E9%81%9E%E5%BB%B6%E6%A8%A1%E5%9E%8B/" rel="tag">非線性遞延模型</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/%E5%81%A5%E5%BA%B7%E9%A2%A8%E9%9A%AA%E8%A9%95%E4%BC%B0/" rel="tag">健康風險評估</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/%E7%B2%BE%E7%A5%9E%E7%95%B0%E5%B8%B8/" rel="tag">精神異常</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/%E5%A4%A9%E6%B0%A3/" rel="tag">天氣</a></li>
+	</ul>
+</div>
+
+	</article>
+	
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="fish ko avatar" src="/img/inuyasha%20.JPG" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About fish ko</span>
+	</div>
+	<div class="authorbox__description">
+		try to work this out.......
+	</div>
+</div>
+	
+<nav class="post-nav row clearfix" itemscope="itemscope" itemtype="http://schema.org/SiteNavigationElement">
+	<div class="post-nav__item post-nav__item--prev col-1-2">
+		<a class="post-nav__link" href="/post/r-%E6%95%99%E5%AD%B8-ch04-%E8%B3%87%E6%96%99%E8%99%95%E7%90%86/" rel="prev"><span class="post-nav__caption">«Previous</span><p class="post-nav__post-title">R 教學 - CH04 資料處理</p></a>
+	</div>
+</nav>
+
+	
+<div class="comments">
+	<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "seimwiwa" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+<aside class="sidebar" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">
+	
+<div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="//google.com/search">
+		<label>
+			<span class="screen-reader-text">Search for:</span>
+			<input class="widget-search__field" type="search" placeholder="SEARCH..." value="" name="q">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+	
+<div class="widget-recent widget">
+	<h4 class="widget__title">Recent Posts</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/post/2018-01-07-health.risk.mental.issue.weather/">健康風險-天氣與精神異常</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch04-%E8%B3%87%E6%96%99%E8%99%95%E7%90%86/">R 教學 - CH04 資料處理</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch03-%E8%BF%B4%E5%9C%88/">R 教學 - CH03 迴圈</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch02-%E5%AD%98%E5%8F%96%E8%B3%87%E6%96%99/">R 教學 - CH02 存取資料</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch01-%E5%9F%BA%E6%9C%AC%E8%AA%9E%E6%B3%95/">R 教學 - CH01 基本語法</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch00-%E5%BC%95%E8%A8%80/">R 教學 - CH00 引言</a></li>
+		</ul>
+	</div>
+</div>
+
+	
+<div class="widget-categories widget">
+	<h4 class="widget__title">Categories</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/categories/r-tutorial">R-Tutorial</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/reserch">Reserch</a></li>
+		</ul>
+	</div>
+</div>
+	
+
+	
+<div class="widget-taglist widget">
+	<h4 class="widget__title">Tags</h4>
+	<div class="widget__content">
+		<a class="widget__link widget__link--taglist" href="/tags/apply" title="apply">apply</a>
+		<a class="widget__link widget__link--taglist" href="/tags/data.table" title="data.table">data.table</a>
+		<a class="widget__link widget__link--taglist" href="/tags/dlnm" title="dlnm">dlnm</a>
+		<a class="widget__link widget__link--taglist" href="/tags/dplyr" title="dplyr">dplyr</a>
+		<a class="widget__link widget__link--taglist" href="/tags/for" title="for">for</a>
+		<a class="widget__link widget__link--taglist" href="/tags/health-risk-assessment" title="health-risk-assessment">health-risk-assessment</a>
+		<a class="widget__link widget__link--taglist" href="/tags/introduction" title="introduction">introduction</a>
+		<a class="widget__link widget__link--taglist" href="/tags/load" title="load">load</a>
+		<a class="widget__link widget__link--taglist" href="/tags/mental-issue" title="mental-issue">mental-issue</a>
+		<a class="widget__link widget__link--taglist" href="/tags/r" title="r">r</a>
+		<a class="widget__link widget__link--taglist" href="/tags/read" title="read">read</a>
+		<a class="widget__link widget__link--taglist" href="/tags/reshape" title="reshape">reshape</a>
+		<a class="widget__link widget__link--taglist" href="/tags/reshape2" title="reshape2">reshape2</a>
+		<a class="widget__link widget__link--taglist" href="/tags/save" title="save">save</a>
+		<a class="widget__link widget__link--taglist" href="/tags/tutorial" title="tutorial">tutorial</a>
+		<a class="widget__link widget__link--taglist" href="/tags/weather-effect" title="weather-effect">weather-effect</a>
+		<a class="widget__link widget__link--taglist" href="/tags/write" title="write">write</a>
+		<a class="widget__link widget__link--taglist" href="/tags/xls" title="xls">xls</a>
+		<a class="widget__link widget__link--taglist" href="/tags/xlsx" title="xlsx">xlsx</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%81%a5%e5%ba%b7%e9%a2%a8%e9%9a%aa%e8%a9%95%e4%bc%b0" title="健康風險評估">健康風險評估</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%84%b2%e5%ad%98%e5%9e%8b%e6%85%8b" title="儲存型態">儲存型態</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%a4%a9%e6%b0%a3" title="天氣">天氣</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%ad%98%e5%8f%96%e8%b3%87%e6%96%99" title="存取資料">存取資料</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e6%9f%a5%e7%9c%8b%e7%89%a9%e4%bb%b6" title="查看物件">查看物件</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e7%89%a9%e4%bb%b6%e5%ae%9a%e7%be%a9" title="物件定義">物件定義</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e7%b2%be%e7%a5%9e%e7%95%b0%e5%b8%b8" title="精神異常">精神異常</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e8%b3%87%e6%96%99%e7%89%a9%e4%bb%b6" title="資料物件">資料物件</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e8%bf%b4%e5%9c%88" title="迴圈">迴圈</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e9%81%8b%e7%ae%97" title="運算">運算</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e9%9d%9e%e7%b7%9a%e6%80%a7%e9%81%9e%e5%bb%b6%e6%a8%a1%e5%9e%8b" title="非線性遞延模型">非線性遞延模型</a>
+	</div>
+</div>
+</aside>
+
+	</div>
+		<footer class="footer" itemscope="itemscope" itemtype="http://schema.org/WPFooter">
+			<div class="container container-inner">
+				<p class="footer__copyright">&copy; 2018 魚缸. <span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad theme</a>.</span></p>
+			</div>
+		</footer>
+	</div>
+
+<script>
+	var navigation = responsiveNav(".menu", {
+		navClass: "menu--collapse",
+	});
+</script>
+</body>
+</html>

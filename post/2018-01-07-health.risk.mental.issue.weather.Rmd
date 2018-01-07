@@ -1,0 +1,866 @@
+---
+title: 健康風險-天氣與精神異常
+author: ''
+date: '2018-01-07'
+slug: ''
+categories:
+  - Reserch
+tags:
+  - dlnm
+  - health risk assessment
+  - mental issue
+  - weather effect
+  - 非線性遞延模型
+  - 健康風險評估
+  - 精神異常
+  - 天氣
+---
+
+
+```{r 0.library.and.data,warning=F,echo=F,message=F}
+setwd("F:/RProject/EMS")
+library(data.table)
+library(dplyr)
+library(dlnm)
+library(splines)
+library(kableExtra)
+library(plotly)
+library(knitr)
+library(directlabels)
+library(ggrepel)
+
+load(file="data/ntp.dlnm.rda")
+load(file="data/shorttesrmrisk.rda")
+load(file="data/longtesrmrisk.rda")
+
+sub.city.case.hourly=sub.city.case%>%
+  mutate(Year=Date%>%format("%Y"),
+         Month=Date%>%format("%m"),
+         Day=Date%>%format("%d"),
+         Week=week(Date),
+         DOW=weekdays(Date))%>%
+  arrange(Date,Hour)
+
+sub.city.case.daily=sub.city.case%>%
+  mutate(Year=Date%>%format("%Y"),
+         Month=Date%>%format("%m"),
+         Day=Date%>%format("%d"),
+         Week=week(Date),
+         DOW=weekdays(Date))%>%
+  arrange(Date,Hour)%>%
+  select(-datetime)%>%
+  group_by(Date, Year,Month,Day,Week,DOW)%>%
+  summarise(Case=sum(Case),
+            ps.mean=ps%>%mean(na.rm=T),
+            temp.mean=temp%>%mean(na.rm=T),
+            temp.min=temp%>%min(na.rm=T),
+            temp.max=temp%>%max(na.rm=T),
+            temp.dtr=temp.max-temp.min,
+            rh.mean=rh%>%mean(na.rm=T),
+            ws.mean=ws%>%mean(na.rm=T),
+            rf.sum=rf%>%sum(na.rm=T),
+            ss.sum=ss%>%sum(na.rm=T))%>%
+  data.frame()
+rm(sub.city.case)
+
+myround=function(x){
+  x=data.frame(x.num=x,x.log=log10(x)%>%round(digits=1))
+  x=x%>%
+    mutate(x.char=x.num%>%as.character(),
+           x.char=ifelse(x.log>=2,x.num%>%round(digits = 0)%>%as.character(),x.char),
+           x.char=ifelse(x.log<2&x.log>=1,x.num%>%round(digits = 1)%>%as.character(),x.char),
+           x.char=ifelse(x.log<1&x.log>=0,x.num%>%round(digits = 2)%>%as.character(),x.char),
+           x.char=ifelse(x.log<0,x.num%>%round(digits = 2)%>%as.character(),x.char))
+  return(x$x.char)
+}
+```
+
+#1.簡介
+
+本研究主要欲探討的議題為氣象狀況對精神相關疾病之影響。
+
+目前取得因精神異常以致使用緊急醫療救護系統之資料。
+
+研究設定新北市為主要研究區域，時間為2006-2013年。
+
+並使用中央氣象局局屬測站板橋站資天氣時資料，其中包含：氣壓、溫度、濕度、風速、日照時數。
+
+**本篇為個人研究成果，無公開、未發表**
+
+#2.研究方法
+
+##2.1長期暴露分析
+
+  - 使用日資料
+
+  - 探討累積累積30天之**劑量-延遲-反應**病例交叉模型
+
+  - 主要探討影響因子包含：日平均氣壓、日平均溫度、日最低溫度、日最高溫度、日溫差、日平均濕度、日平均風速、日總日照時間
+  
+  - 調整之因子包含：長期趨勢、周次日期
+  
+  - 將個別探討主要影響標的影響情形，即一次僅使用一種氣象參數
+  
+##2.2短期暴露分析
+
+  - 使用時資料
+
+  - 探討累積48天小時之**劑量-延遲-反應**病例交叉模型
+
+  - 主要探討影響因子包含：時溫度
+  
+  - 調整之因子包含：長期趨勢、周次日期、時濕度、時風速
+
+##2.3模型參數設定
+
+  - 使用非線性遞延廣義線性模式(Distributed Lag Non-Linear Models)
+  
+  - 利用氣象參數，設定以的二次雲行線(nature cubic spline)擬合的時間-變量二維矩陣。
+  
+  - 延遲時間與氣象因子二次雲行線的參數設置如：自由度(df)、節點(knots)設置方式首先考量過去文獻、過去經驗、利用赤池信息指標(Akaike information criterion)選出較配適度較高的組合。
+  
+  - 延遲時間有短期：48小時(時資料)、長期：30天(日資料)兩種，主要考量來自過去文獻提出，在長期趨勢中，極端高溫影響主要集中於前七天，極端低溫的影響則在21天後；而短期暴露的延遲效應較少人提出，需要考證。
+  
+  - 長期趨勢的調整因子，也利用雲行線設定，因總研究時間為8年，總共設置10*8個自由度，參考自過去文獻。
+  
+  - 周次日期為類別變數之調整因子；以周一最為參考點。不另外使用節日、流感住院人數為調整因子。
+  
+  - 短期暴露分析中添加每小時溫度與風速為調整因子，使用自由度為四之雲行線擬合。
+  
+  - 長期暴露分析中一次只討論一個氣象因子，不考慮兩個氣象因子的模式與交互作用。
+  
+  - 顯著風險增幅判定是當相對風險(RR)與他的95%信賴區間都大於1。保護效果則是皆小於一。
+  
+  - 無論何種暴露方式，都使用「累積相對風險」與「特定溫度、時間之相對風險」來觀察時間、主要氣象因子對因精神異常使用救護系統人數之風險。其目的是因為，累積相對風險可以針對總風險進行描述，但沒有詳細說明不同時間、變量的單位風險，當某一因子僅在特定時間點出現風險，總風險不一定會有顯著，因此才會利用特定溫度、時間之相對風險進行描述。
+
+#3.研究成果
+
+##3.1敘述性統計
+
+###3.1.1日資料
+
+######Table.1 Summary table - Daily variable
+
+```{r 3.1.1.summary.table.weather,warning=F,echo=F,message=F}
+table.3.1.1=sub.city.case.daily%>%
+  select(Case,ps.mean,temp.mean,temp.min,temp.max,temp.dtr,rh.mean,ws.mean,ss.sum)%>%
+  melt()%>%
+  group_by(variable)%>%
+  summarise(`Total Size`=n(),
+            `Zero`=ifelse(value==0,1,0)%>%sum(na.rm=T),
+            `Missing`=value%>%is.na%>%sum(na.rm=T),
+            Sum=value%>%sum(na.rm=T),
+            Mean=value%>%mean(na.rm=T)%>%round(digits=2),
+            `Standard Deviation`=value%>%sd(na.rm=T)%>%round(digits=2),
+            Minimum=value%>%min(na.rm=T)%>%round(digits=2),
+            Maximum=value%>%max(na.rm=T)%>%round(digits=2),
+            `25th`=value%>%quantile(na.rm=T)%>%.[2]%>%round(digits=2),
+            `50th`=value%>%quantile(na.rm=T)%>%.[3]%>%round(digits=2),
+            `75th`=value%>%quantile(na.rm=T)%>%.[4]%>%round(digits=2))%>%
+  ungroup()%>%
+  mutate(variable=c("Patients","Pressure (hpa)","Temperature (C)","Temperature (C)","Temperature (C)","Temperature",
+                    "Relative humidity (%)","Wind speed (m/s)","Sun shine (hour)"),
+         Method=c("Sum","Mean","Mean","Minimum","Maximum","Differ","Mean","Mean","Sum"))%>%
+  mutate_at(.vars = c(5:12),.funs = funs(myround(.)))%>%
+  select(variable,Method,`Total Size`:`75th`)%>%
+  rename(Names="variable")
+table.3.1.1%>%
+  kable("html")%>%
+  kable_styling(bootstrap_options = "striped", full_width = F)%>%
+  add_header_above(c("Variable"=2,"Sample"=3,"Basic index"=5,"Percentiles"=3))
+```
+
+######Figure.1 Trend plot - Daily variable
+
+```{r 3.1.1.plot.variable.trend,warning=F,echo=F,message=F,dpi=300,fig.height=10}
+sub.city.case.daily%>%
+  select(Date,Case,ps.mean,temp.mean,temp.min,temp.max,temp.dtr,rh.mean,ws.mean,ss.sum)%>%
+  melt(id.vars=c("Date"))%>%
+  mutate(variable=factor(variable,
+                         levels=c("Case","ps.mean","temp.mean","temp.min","temp.max","temp.dtr","rh.mean","ws.mean","ss.sum"),
+                         labels=c("Patients","Presure","Maen temperature","Minimum temperature","Maximum temperature","Temperature DTR","Mean relative humidity","Mean wind speed","Sum sunshine hour")))%>%
+  ggplot(aes(Date,value))+
+  geom_point(size=0.5,alpha=0.5)+
+  facet_wrap(~variable,ncol=2,scale="free_y")+
+  labs(x="Year",y="")+
+  theme_bw()+
+  theme(strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+```
+
+######Figure.2 Boxplot - Daily variable
+
+```{r 3.1.1.boxplot.variable.trend,warning=F,echo=F,message=F,dpi=300,fig.height=6}
+sub.city.case.daily%>%
+  select(Date,Case,ps.mean,temp.mean,temp.min,temp.max,temp.dtr,rh.mean,ws.mean,ss.sum)%>%
+  melt(id.vars=c("Date"))%>%
+  mutate(variable=factor(variable,
+                         levels=c("Case","ps.mean","temp.mean","temp.min","temp.max","temp.dtr","rh.mean","ws.mean","ss.sum"),
+                         labels=c("Patients","Presure","Maen temperature","Minimum temperature","Maximum temperature","Temperature DTR","Mean relative humidity","Mean wind speed","Sum sunshine hour")))%>%
+  ggplot(aes(x=variable,y=value))+
+  geom_boxplot()+
+  facet_wrap(~variable,ncol=1,scale="free")+
+  labs(x="",y="")+
+  coord_flip()+
+  theme_bw()+
+  theme(strip.background = element_blank(),
+        axis.text.y = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+```
+
+###3.1.2小時資料
+
+######Table.2 Summary table - Hourly variable
+
+```{r 3.1.2.summary.table.ems,warning=F,echo=F,message=F}
+table.3.1.2=sub.city.case.hourly%>%
+  select(Case,ps,temp,rh,ws,ss)%>%
+  melt()%>%
+  group_by(variable)%>%
+  summarise(`Total Size`=n(),
+            `Zero`=ifelse(value==0,1,0)%>%sum(na.rm=T),
+            `Missing`=value%>%is.na%>%sum(na.rm=T),
+            Sum=value%>%sum(na.rm=T),
+            Mean=value%>%mean(na.rm=T)%>%round(digits=2),
+            `Standard Deviation`=value%>%sd(na.rm=T)%>%round(digits=2),
+            Minimum=value%>%min(na.rm=T)%>%round(digits=2),
+            Maximum=value%>%max(na.rm=T)%>%round(digits=2),
+            `25th`=value%>%quantile(na.rm=T)%>%.[2]%>%round(digits=2),
+            `50th`=value%>%quantile(na.rm=T)%>%.[3]%>%round(digits=2),
+            `75th`=value%>%quantile(na.rm=T)%>%.[4]%>%round(digits=2))%>%
+  ungroup()%>%
+  mutate(variable=c("Patients","Pressure (hpa)","Temperature (C)","Relative humidity (%)","Wind speed (m/s)","Sun shine (hour)"))%>%
+  mutate_at(.vars = c(4:11),.funs = funs(myround(.)))%>%
+  select(variable,`Total Size`:`75th`)%>%
+  rename(Names="variable")
+table.3.1.2%>%
+  kable("html")%>%
+  kable_styling(bootstrap_options = "striped", full_width = F)%>%
+  add_header_above(c("Variable"=1,"Sample"=3,"Basic index"=5,"Percentiles"=3))
+```
+
+###3.1.3各類因子與使用救護系統人數分布
+
+####3.1.3.1時間
+
+######Figure.3 Annually trend of patients
+
+```{r 3.1.3.1.Annually.line.cahrt,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+sub.city.case.daily%>%
+  group_by(Year)%>%
+  summarise(Case=sum(Case,na.rm = T))%>%
+  ggplot(aes(x=Year%>%as.numeric(),y=Case))+
+  geom_line(colour="#023852",size=1.5)+
+  geom_point(fill="#023852", colour="white",pch=21, size=4,stroke = 4)+
+  geom_text(aes(label=paste(Case,"\n",round(Case/sum(Case)*100,digits=1),"%",sep="")),vjust=-0.2)+
+  labs(x="年度",y="")+
+  theme_bw()+
+  theme(panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        axis.text.y = element_blank())
+```
+
+######Figure.4 Annually patients number in each months
+
+```{r 3.1.3.1.barchart.month,warning=F,echo=F,message=F,dpi=300,fig.height=8}
+sub.city.case.daily%>%
+  group_by(Year,Month)%>%
+  summarise(Case=sum(Case,na.rm = T))%>%
+  ggplot(aes(x=Month,y=Case))+
+  geom_bar(stat="identity",fill="#DBA67B",colour="white",size=2)+
+  geom_text(aes(label=paste(Year,"\n","N=",Case,sep="")),vjust=2,position = "stack",colour="#023852",size=3)+
+  labs(x="",y="")+
+  theme_bw()+
+  theme(panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.position = "bottom")
+```
+
+######Figure.5 Box plot for Patients number in day of week
+
+```{r 3.1.3.1.boxplot.dow,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+sub.city.case.daily%>%
+  mutate(DOW=factor(DOW,levels=c("星期日","星期一","星期二","星期三","星期四","星期五","星期六")))%>%
+  ggplot(aes(x=DOW,y=Case))+
+  geom_boxplot()+
+  labs(x="",y="")+
+  theme_bw()+
+  theme(panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+```
+
+####3.1.3.2氣象因子
+
+######Figure.6 Bar plot - Cases in temperature
+
+```{r 3.1.3.2.Case.in,each.temperature,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+sub.city.case.hourly%>%
+  select(temp,Case)%>%
+  mutate(temp=round(temp))%>%
+  group_by(temp)%>%
+  summarise(Case=sum(Case),
+            Days=n())%>%
+  ungroup%>%
+  mutate(Case.percent=Case/sum(Case)*100)%>%
+  ggplot(aes(x=temp))+
+  geom_bar(aes(y=Case.percent,fill="Patients"),stat="identity")+
+  geom_line(aes(y=Case/Days*10,colour="#EAE7D6"),size=1.5)+
+  geom_point(aes(y=Case/Days*10,fill="PerDay", colour="#EF525B"),pch=21, size=1,stroke = 1)+
+  scale_fill_manual(values=c("#082E41", "#DA2536"),labels = c("Case number(%)","Case per 10 days"))+
+  scale_colour_manual(values=c("#EAE7D6","#EF525B"))+
+  labs(x="Temperature",y="Patient(%)",fill="")+
+  guides(colour=F)+
+  theme_bw()+
+  theme(panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.position = "bottom")
+```
+
+######Figure.7 Contour plot - Cases in relative humidity
+
+```{r 3.1.3.2.Case.in,each.relative.humidity,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+sub.city.case.hourly%>%
+  select(rh,Case)%>%
+  mutate(rh=round(rh))%>%
+  group_by(rh)%>%
+  summarise(Case=sum(Case),
+            Days=n())%>%
+  ungroup%>%
+  mutate(Case.percent=Case/sum(Case)*100)%>%
+  ggplot(aes(x=rh))+
+  geom_bar(aes(y=Case.percent,fill="Patients"),stat="identity")+
+  geom_line(aes(y=Case/Days*10,colour="#EAE7D6"),size=1.5)+
+  geom_point(aes(y=Case/Days*10,fill="PerDay", colour="#EF525B"),pch=21, size=1,stroke = 1)+
+  scale_fill_manual(values=c("#082E41", "#DA2536"),labels = c("Case number(%)","Case per 10 days"))+
+  scale_colour_manual(values=c("#EAE7D6","#EF525B"))+
+  labs(x="Relative humidity",y="Patient(%)",fill="")+
+  guides(colour=F)+
+  theme_bw()+
+  theme(panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        legend.position = "bottom")
+```
+
+######Figure.8 Contour plot - Cases in temperature and relative humidity
+
+```{r 3.1.3.2.Annually.line.cahrt,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+sub.city.case.hourly%>%
+  select(temp,rh,Case)%>%
+  mutate(temp=round(temp),
+         rh=round(rh))%>%
+  group_by(temp,rh)%>%
+  summarise(Case=sum(Case))%>%
+  ggplot(aes(x=temp,y=rh,,z=Case))+
+  geom_tile(aes(fill=Case))+
+  geom_contour()+
+  geom_smooth(colour="#EF525B",se=F)+
+  labs(x="Temperature",y="Relative humidity")+
+  scale_fill_gradient2(low="#FFEC97",mid="#60A65F",high="#2B3D54")+
+  theme_bw()+
+  theme(panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+```
+
+######Figure.9 Point distrebuted - Temperature and Pressure
+
+```{r 3.1.3.2.point.temp.ps,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+sub.city.case.daily%>%
+  select(ps.mean,temp.mean)%>%
+  ggplot(aes(x=temp.mean,y=ps.mean))+
+  geom_smooth()+
+  geom_point(alpha=0.5,size=0.5)+
+  labs(x="Mean temperature",y="Pressure")+
+  theme_bw()+
+  theme(strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+```
+
+##3.2氣象因子風險模型
+
+###3.2.1長期暴露
+
+####3.2.1.1日平均氣壓
+
+######Figure.10 Significant cumulative relative risk of long-term daily mean ambient pressure exposures on lag 30 days.
+
+```{r 3.2.1.1.RR.overall,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="ps.mean")%>%
+  filter(RRtype=="Cmulative predicted associations",Lagtpye==30)%>%
+  mutate(RR=paste(myround(fit)," (",myround(low),"-",myround(high),")",sep=""),
+         RR=ifelse(Significant=="Significant",RR,""))%>%
+  ggplot(aes(x=ind.variable.value,y=fit,ymin=low,ymax=high))+
+  geom_hline(yintercept = 1,linetype = 2,colour="#ED1B4B",size=1)+
+  geom_ribbon(fill="#F2D06B",alpha=0.3)+
+  geom_line(colour="#A8226B",alpha=1)+
+  geom_point(fill="#023852", colour="white",pch=21, size=2,stroke = 1,aes(alpha=Significant))+
+  geom_label_repel(aes(label=RR),fill=0.5)+
+  scale_alpha_manual(values=c(0,1))+
+  labs(x="Mean ambient pressure (hpa)",y="Relative risk",alpha="")+
+  theme_bw()+
+  theme(legend.position = "bottom",
+        strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+
+```
+
+**僅呈現有顯著之風險**
+
+######Figure.11 Significant cumulative and specific relative risk of long-term daily mean ambient pressure exposures on lag 0 to 30 days.
+
+```{r 3.2.1.1.RR.countour,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="ps.mean")%>%
+  filter(Significant=="Significant")%>%
+  ggplot(aes(x=ind.variable.value,y=Lagtpye))+
+  geom_tile(aes(fill=fit))+
+  geom_contour(aes(z=fit),colour="#52003B",binwidth = 0.25)+
+  facet_grid(~RRtype)+
+  labs(x="Mean ambient pressure (hpa)",y="Lag hours",fill="Relative risk")+
+  scale_fill_continuous(low="#FFC286",high="#945634")+
+  scale_x_continuous(limits=c(971,1032))+
+  scale_y_continuous(limits=c(0,30))+
+  theme_bw()+
+  theme(strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+```
+
+####3.2.1.2氣溫
+
+#####3.2.1.2.1日平均氣溫
+
+######Figure.12 Significant cumulative relative risk of long-term daily mean temperature exposures on lag 30 days.
+
+```{r 3.2.1.2.1.RR.overall,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="temp.mean")%>%
+  filter(RRtype=="Cmulative predicted associations",Lagtpye==30)%>%
+  mutate(RR=paste(myround(fit)," (",myround(low),"-",myround(high),")",sep=""),
+         RR=ifelse(Significant=="Significant",RR,""))%>%
+  ggplot(aes(x=ind.variable.value,y=fit,ymin=low,ymax=high))+
+  geom_hline(yintercept = 1,linetype = 2,colour="#ED1B4B",size=1)+
+  geom_ribbon(fill="#F2D06B",alpha=0.3)+
+  geom_line(colour="#A8226B",alpha=1)+
+  geom_point(fill="#023852", colour="white",pch=21, size=2,stroke = 1,aes(alpha=Significant))+
+  geom_label_repel(aes(label=RR),fill=0.5)+
+  scale_alpha_manual(values=c(0,1))+
+  labs(x="Mean temperature",y="Relative risk",alpha="")+
+  theme_bw()+
+  theme(legend.position = "bottom",
+        strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+
+```
+
+**僅呈現有顯著之風險**
+
+######Figure.13 Significant cumulative and specific relative risk of long-term daily mean temperature exposures on lag 0 to 30 days.
+
+```{r 3.2.1.2.1.RR.countour,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="temp.mean")%>%
+  filter(Significant=="Significant")%>%
+  ggplot(aes(x=ind.variable.value,y=Lagtpye))+
+  geom_tile(aes(fill=fit))+
+  geom_contour(aes(z=fit),colour="#52003B",binwidth = 0.25)+
+  facet_grid(~RRtype)+
+  labs(x="Mean temperature",y="Lag hours",fill="Relative risk")+
+  scale_fill_continuous(low="#FFC286",high="#945634")+
+  scale_x_continuous(limits=c(8,32))+
+  scale_y_continuous(limits=c(0,30))+
+  theme_bw()+
+  theme(strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+```
+
+#####3.2.1.2.2日最低氣溫
+
+######Figure.14 Significant cumulative relative risk of long-term daily minimum temperature exposures on lag 30 days.
+
+```{r 3.2.1.2.2.RR.overall,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="temp.min")%>%
+  filter(RRtype=="Cmulative predicted associations",Lagtpye==30)%>%
+  mutate(RR=paste(myround(fit)," (",myround(low),"-",myround(high),")",sep=""),
+         RR=ifelse(Significant=="Significant",RR,""))%>%
+  ggplot(aes(x=ind.variable.value,y=fit,ymin=low,ymax=high))+
+  geom_hline(yintercept = 1,linetype = 2,colour="#ED1B4B",size=1)+
+  geom_ribbon(fill="#F2D06B",alpha=0.3)+
+  geom_line(colour="#A8226B",alpha=1)+
+  geom_point(fill="#023852", colour="white",pch=21, size=2,stroke = 1,aes(alpha=Significant))+
+  geom_label_repel(aes(label=RR),fill=0.5)+
+  scale_alpha_manual(values=c(0,1))+
+  scale_x_continuous(limits=c(5,30))+
+  scale_y_continuous(limits=c(0,30))+
+  labs(x="Minium temperature",y="Relative risk",alpha="")+
+  theme_bw()+
+  theme(legend.position = "bottom",
+        strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+
+```
+
+**僅呈現有顯著之風險**
+
+######Figure.15 Contour - Significant cumulative and specific relative risk of long-term daily minimum temperature exposures on lag 0 to 30 days.
+
+```{r 3.2.1.2.2.RR.countour,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="temp.min")%>%
+  filter(Significant=="Significant")%>%
+  ggplot(aes(x=ind.variable.value,y=Lagtpye))+
+  geom_tile(aes(fill=fit))+
+  geom_contour(aes(z=fit),colour="#52003B",binwidth = 0.25)+
+  facet_grid(~RRtype)+
+  labs(x="Minium temperature",y="Lag hours",fill="Relative risk")+
+  scale_fill_continuous(low="#FFC286",high="#945634")+
+  theme_bw()+
+  theme(strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+```
+
+#####3.2.1.2.3日最高氣溫
+
+######Figure.16 Significant cumulative relative risk of long-term daily maximum temperature exposures on lag 30 days.
+
+```{r 3.2.1.2.3.RR.overall,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="temp.max")%>%
+  filter(RRtype=="Cmulative predicted associations",Lagtpye==30)%>%
+  mutate(RR=paste(myround(fit)," (",myround(low),"-",myround(high),")",sep=""),
+         RR=ifelse(Significant=="Significant",RR,""))%>%
+  ggplot(aes(x=ind.variable.value,y=fit,ymin=low,ymax=high))+
+  geom_hline(yintercept = 1,linetype = 2,colour="#ED1B4B",size=1)+
+  geom_ribbon(fill="#F2D06B",alpha=0.3)+
+  geom_line(colour="#A8226B",alpha=1)+
+  geom_point(fill="#023852", colour="white",pch=21, size=2,stroke = 1,aes(alpha=Significant))+
+  geom_label_repel(aes(label=RR),fill=0.5)+
+  scale_alpha_manual(values=c(0,1))+
+  labs(x="Maximum temperature",y="Relative risk",alpha="")+
+  theme_bw()+
+  theme(legend.position = "bottom",
+        strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+
+```
+
+**僅呈現有顯著之風險**
+
+######Figure.17 Significant cumulative and specific relative risk of long-term daily maximum temperature exposures on lag 0 to 30 days.
+
+```{r 3.2.1.2.3.RR.countour,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="temp.max")%>%
+  filter(Significant=="Significant")%>%
+  ggplot(aes(x=ind.variable.value,y=Lagtpye))+
+  geom_tile(aes(fill=fit))+
+  geom_contour(aes(z=fit),colour="#52003B",binwidth = 0.25)+
+  facet_grid(~RRtype)+
+  labs(x="Maximum temperature",y="Lag hours",fill="Relative risk")+
+  scale_fill_continuous(low="#FFC286",high="#945634")+
+  scale_x_continuous(limits=c(9,39))+
+  scale_y_continuous(limits=c(0,30))+
+  theme_bw()+
+  theme(strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+```
+
+#####3.2.1.2.4日溫差
+
+######Figure.18 Significant cumulative relative risk of long-term diurnal temperature range exposures on lag 30 days.
+
+```{r 3.2.1.2.4.RR.overall,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="temp.dtr")%>%
+  filter(RRtype=="Cmulative predicted associations",Lagtpye==30)%>%
+  mutate(RR=paste(myround(fit)," (",myround(low),"-",myround(high),")",sep=""),
+         RR=ifelse(Significant=="Significant",RR,""))%>%
+  ggplot(aes(x=ind.variable.value,y=fit,ymin=low,ymax=high))+
+  geom_hline(yintercept = 1,linetype = 2,colour="#ED1B4B",size=1)+
+  geom_ribbon(fill="#F2D06B",alpha=0.3)+
+  geom_line(colour="#A8226B",alpha=1)+
+  geom_point(fill="#023852", colour="white",pch=21, size=2,stroke = 1,aes(alpha=Significant))+
+  geom_label_repel(aes(label=RR),fill=0.5)+
+  scale_alpha_manual(values=c(0,1))+
+  labs(x="Diurnal temperature range",y="Relative risk",alpha="")+
+  theme_bw()+
+  theme(legend.position = "bottom",
+        strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+
+```
+
+**下圖均不顯著**
+
+######Figure.19 Cumulative and specific relative risk of long-term diurnal temperature range exposures on lag 0 to 30 days.
+
+```{r 3.2.1.2.4.RR.countour,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="temp.dtr")%>%
+  ggplot(aes(x=ind.variable.value,y=Lagtpye))+
+  geom_tile(aes(fill=fit))+
+  geom_contour(aes(z=fit),colour="#52003B",binwidth = 0.25)+
+  facet_grid(~RRtype)+
+  labs(x="Diurnal temperature range",y="Lag hours",fill="Relative risk")+
+  scale_fill_continuous(low="#FCFFF5",high="#CBDBD7")+
+  scale_x_continuous(limits=c(0,19))+
+  scale_y_continuous(limits=c(0,30))+
+  theme_bw()+
+  theme(strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+```
+
+####3.2.1.3日平均濕度
+
+######Figure.20 Significant cumulative relative risk of long-term mean relative humidity exposures on lag 30 days.
+
+```{r 3.2.1.3.RR.overall,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="rh.mean")%>%
+  filter(RRtype=="Cmulative predicted associations",Lagtpye==30)%>%
+  mutate(RR=paste(myround(fit)," (",myround(low),"-",myround(high),")",sep=""),
+         RR=ifelse(Significant=="Significant",RR,""))%>%
+  ggplot(aes(x=ind.variable.value,y=fit,ymin=low,ymax=high))+
+  geom_hline(yintercept = 1,linetype = 2,colour="#ED1B4B",size=1)+
+  geom_ribbon(fill="#F2D06B",alpha=0.3)+
+  geom_line(colour="#A8226B",alpha=1)+
+  geom_point(fill="#023852", colour="white",pch=21, size=2,stroke = 1,aes(alpha=Significant))+
+  geom_label_repel(aes(label=RR),fill=0.5)+
+  scale_alpha_manual(values=c(0,1))+
+  labs(x="Average relative humidity (%)",y="Relative risk",alpha="")+
+  theme_bw()+
+  theme(legend.position = "bottom",
+        strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+
+```
+
+**僅呈現有顯著之風險**
+
+######Figure.21 Significant cumulative and specific relative risk of long-term mean relative humidity exposures on lag 0 to 30 days.
+
+```{r 3.2.1.3.RR.countour,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="rh.mean")%>%
+  filter(Significant=="Significant")%>%
+  ggplot(aes(x=ind.variable.value,y=Lagtpye))+
+  geom_tile(aes(fill=fit))+
+  geom_contour(aes(z=fit),colour="#52003B",binwidth = 0.25)+
+  facet_grid(~RRtype)+
+  labs(x="Average relative humidity (%)",y="Lag hours",fill="Relative risk")+
+  scale_fill_continuous(low="#FFC286",high="#945634")+
+  scale_x_continuous(limits=c(39,97))+
+  scale_y_continuous(limits=c(0,30))+
+  theme_bw()+
+  theme(strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+```
+
+####3.2.1.4日平均風速
+
+######Figure.22 Significant cumulative relative risk of long-term mean wind speed exposures on lag 30 days.
+
+```{r 3.2.1.4.RR.overall,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="ws.mean")%>%
+  filter(RRtype=="Cmulative predicted associations",Lagtpye==30)%>%
+  mutate(RR=paste(myround(fit)," (",myround(low),"-",myround(high),")",sep=""),
+         RR=ifelse(Significant=="Significant",RR,""))%>%
+  ggplot(aes(x=ind.variable.value,y=fit,ymin=low,ymax=high))+
+  geom_hline(yintercept = 1,linetype = 2,colour="#ED1B4B",size=1)+
+  geom_ribbon(fill="#F2D06B",alpha=0.3)+
+  geom_line(colour="#A8226B",alpha=1)+
+  geom_point(fill="#023852", colour="white",pch=21, size=2,stroke = 1,aes(alpha=Significant))+
+  geom_label_repel(aes(label=RR),fill=0.5)+
+  scale_alpha_manual(values=c(0,1))+
+  labs(x="Mean wind speed (m/s)",y="Relative risk",alpha="")+
+  theme_bw()+
+  theme(legend.position = "none",
+        strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+
+```
+
+**下圖均不顯著**
+
+######Figure.23 Cumulative and specific relative risk of long-term mean wind speed exposures on lag 0 to 30 days.
+
+```{r 3.2.1.4.RR.countour,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="ws.mean")%>%
+  ggplot(aes(x=ind.variable.value,y=Lagtpye))+
+  geom_tile(aes(fill=fit))+
+  geom_contour(aes(z=fit),colour="#52003B",binwidth = 0.25)+
+  facet_grid(~RRtype)+
+  labs(x="Mean wind speed (m/s)",y="Lag hours",fill="Relative risk")+
+  scale_fill_continuous(low="#FCFFF5",high="#CBDBD7")+
+  scale_x_continuous(limits=c(0,7))+
+  scale_y_continuous(limits=c(0,30))+
+  theme_bw()+
+  theme(strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+```
+
+####3.2.1.5日總日照時間
+
+######Figure.24 Significant cumulative relative risk of long-term total sunshine hour exposures on lag 30 days.
+
+```{r 3.2.1.5.RR.overall,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="ss.sum")%>%
+  filter(RRtype=="Cmulative predicted associations",Lagtpye==30)%>%
+  mutate(RR=paste(myround(fit)," (",myround(low),"-",myround(high),")",sep=""),
+         RR=ifelse(Significant=="Significant",RR,""))%>%
+  ggplot(aes(x=ind.variable.value,y=fit,ymin=low,ymax=high))+
+  geom_hline(yintercept = 1,linetype = 2,colour="#ED1B4B",size=1)+
+  geom_ribbon(fill="#F2D06B",alpha=0.3)+
+  geom_line(colour="#A8226B",alpha=1)+
+  geom_point(fill="#023852", colour="white",pch=21, size=2,stroke = 1,aes(alpha=Significant))+
+  geom_label_repel(aes(label=RR),fill=0.5)+
+  scale_alpha_manual(values=c(0,1))+
+  labs(x="Total sunshine hour (hour)",y="Relative risk",alpha="")+
+  theme_bw()+
+  theme(legend.position = "none",
+        strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+
+```
+
+**下圖均不顯著**
+
+######Figure.25 Cumulative and specific relative risk of long-term total sunshine hour exposures on lag 0 to 30 days.
+
+```{r 3.2.1.5.RR.countour,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr.long%>%
+  filter(ind.variable=="ss.sum")%>%
+  ggplot(aes(x=ind.variable.value,y=Lagtpye))+
+  geom_tile(aes(fill=fit))+
+  geom_contour(aes(z=fit),colour="#52003B",binwidth = 0.25)+
+  facet_grid(~RRtype)+
+  labs(x="Total sunshine hour (hour)",y="Lag hours",fill="Relative risk")+
+  scale_fill_continuous(low="#FCFFF5",high="#CBDBD7")+
+  scale_x_continuous(limits=c(0,13))+
+  scale_y_continuous(limits=c(0,30))+
+  theme_bw()+
+  theme(strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+```
+
+###3.2.2短期暴露
+
+######Figure.26 Significant cumulative relative risk of short-term hourly temperature exposures on lag 48 hours.
+
+```{r 3.2.2.RR.overall,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr%>%
+  filter(ind.variable=="Temp")%>%
+  filter(RRtype=="Cmulative predicted associations",Lagtpye==48)%>%
+  mutate(RR=paste(myround(fit)," (",myround(low),"-",myround(high),")",sep=""),
+         RR=ifelse(Significant=="Significant",RR,""))%>%
+  ggplot(aes(x=ind.variable.value,y=fit,ymin=low,ymax=high))+
+  geom_hline(yintercept = 1,linetype = 2,colour="#ED1B4B",size=1)+
+  geom_ribbon(fill="#F2D06B",alpha=0.3)+
+  geom_line(colour="#A8226B",alpha=1)+
+  geom_point(fill="#023852", colour="white",pch=21, size=2,stroke = 1,aes(alpha=Significant))+
+  geom_label_repel(aes(label=RR),fill=0.5)+
+  scale_alpha_manual(values=c(0,1))+
+  labs(x="Total sunshine hour (hour)",y="Relative risk",alpha="")+
+  theme_bw()+
+  theme(legend.position = "none",
+        strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+
+```
+
+**僅呈現有顯著之風險**
+
+######Figure.27 Significant cumulative and specific relative risk of short-term daily hourly temperature exposures on lag 0 to 48 hours.
+
+```{r 3.2.2.RR.countour,warning=F,echo=F,message=F,dpi=300,fig.height=4}
+list.rr%>%
+  filter(Significant=="Significant")%>%
+  ggplot(aes(x=ind.variable.value,y=Lagtpye))+
+  geom_tile(aes(fill=fit))+
+  geom_contour(aes(z=fit),colour="#52003B",binwidth = 0.25)+
+  facet_grid(~RRtype)+
+  labs(x="Temperature",y="Lag hours",fill="Relative risk")+
+  scale_fill_continuous(low="#FFC286",high="#945634")+
+  theme_bw()+
+  theme(strip.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank())
+```
+

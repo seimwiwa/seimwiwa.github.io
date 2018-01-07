@@ -6,20 +6,28 @@
     <description>Recent content in R on 魚缸</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ch</language>
-    <lastBuildDate>Thu, 23 Jul 2015 21:13:14 -0500</lastBuildDate>
+    <lastBuildDate>Sun, 07 Jan 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Hello R Markdown</title>
-      <link>/post/2015-07-23-r-rmarkdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>R tutorial - CH04 資料處理</title>
+      <link>/post/r-tutorial-ch04-%E8%B3%87%E6%96%99%E8%99%95%E7%90%86/</link>
+      <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/post/2015-07-23-r-rmarkdown/</guid>
-      <description>R MarkdownThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars)## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
+      <guid>/post/r-tutorial-ch04-%E8%B3%87%E6%96%99%E8%99%95%E7%90%86/</guid>
+      <description>#資料處理
+在此總共會介紹數個不同的方法來完成資料處理。 其中包含原本內建的函數與三個套件：reshape、reshape2、data.table、dplyr中的函數。 三個套件個別的工作是：
+reshape：用兩個簡單的函數：melt與cast來靈活的改變資料結構。
+reshape2：用兩個簡單的函數：melt與dcast來靈活的改變資料結構。
+dplyr：快速有秩並節省記憶體空間的處理資料結構。
+而reshape與reshape2的差異很小，只在reshape中的cast只能用來處理數字，reshape2的dcast可以處理數字及文字。
+以下分成：資料合併、欄轉列、列轉欄、轉置文字資料、資料排列、資料篩選、欄位計算、資料整併來介紹
+##資料合併
+設有兩筆資料如下dat.a與dat.b。 dat.a紀載類別與數值，dat.b紀載不同類別的日期。
+dat.a=data.frame(class=c(&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;A&amp;quot;,&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;C&amp;quot;),values=c(sample(x=1:10,size=6))) dat.a  ## class values ## 1 A 3 ## 2 B 7 ## 3 A 8 ## 4 A 6 ## 5 B 1 ## 6 C 10  dat.b=data.frame(class=c(&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;D&amp;quot;),date=c(&amp;quot;2000-01-05&amp;quot;,&amp;quot;2015-01-05&amp;quot;,&amp;quot;2015-02-05&amp;quot;)) dat.b  ## class date ## 1 A 2000-01-05 ## 2 B 2015-01-05 ## 3 D 2015-02-05  最終希望資料可以合成如下，即是依照class分類來合併兩筆資料，在新資料中能顯示不同類別的日期。
+## class values date ## 1 A 3 2000-01-05 ## 2 A 8 2000-01-05 ## 3 A 6 2000-01-05 ## 4 B 7 2015-01-05 ## 5 B 1 2015-01-05  因此我們需要用到merge這個函數</description>
     </item>
     
   </channel>

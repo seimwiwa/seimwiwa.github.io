@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mental Issue on 魚缸</title>
+    <link>/tags/mental-issue/</link>
+    <description>Recent content in Mental Issue on 魚缸</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ch</language>
+    <lastBuildDate>Sun, 07 Jan 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/mental-issue/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>健康風險-天氣與精神異常</title>
+      <link>/post/2018-01-07-health.risk.mental.issue.weather/</link>
+      <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018-01-07-health.risk.mental.issue.weather/</guid>
+      <description>1.簡介本研究主要欲探討的議題為氣象狀況對精神相關疾病之影響。
+目前取得因精神異常以致使用緊急醫療救護系統之資料。
+研究設定新北市為主要研究區域，時間為2006-2013年。
+並使用中央氣象局局屬測站板橋站資天氣時資料，其中包含：氣壓、溫度、濕度、風速、日照時數。
+本篇為個人研究成果，無公開、未發表
+2.研究方法2.1長期暴露分析使用日資料
+探討累積累積30天之劑量-延遲-反應病例交叉模型
+主要探討影響因子包含：日平均氣壓、日平均溫度、日最低溫度、日最高溫度、日溫差、日平均濕度、日平均風速、日總日照時間
+調整之因子包含：長期趨勢、周次日期
+將個別探討主要影響標的影響情形，即一次僅使用一種氣象參數
+2.2短期暴露分析使用時資料
+探討累積48天小時之劑量-延遲-反應病例交叉模型
+主要探討影響因子包含：時溫度
+調整之因子包含：長期趨勢、周次日期、時濕度、時風速
+2.3模型參數設定使用非線性遞延廣義線性模式(Distributed Lag Non-Linear Models)
+利用氣象參數，設定以的二次雲行線(nature cubic spline)擬合的時間-變量二維矩陣。
+延遲時間與氣象因子二次雲行線的參數設置如：自由度(df)、節點(knots)設置方式首先考量過去文獻、過去經驗、利用赤池信息指標(Akaike information criterion)選出較配適度較高的組合。
+延遲時間有短期：48小時(時資料)、長期：30天(日資料)兩種，主要考量來自過去文獻提出，在長期趨勢中，極端高溫影響主要集中於前七天，極端低溫的影響則在21天後；而短期暴露的延遲效應較少人提出，需要考證。
+長期趨勢的調整因子，也利用雲行線設定，因總研究時間為8年，總共設置10*8個自由度，參考自過去文獻。
+周次日期為類別變數之調整因子；以周一最為參考點。不另外使用節日、流感住院人數為調整因子。
+短期暴露分析中添加每小時溫度與風速為調整因子，使用自由度為四之雲行線擬合。
+長期暴露分析中一次只討論一個氣象因子，不考慮兩個氣象因子的模式與交互作用。
+顯著風險增幅判定是當相對風險(RR)與他的95%信賴區間都大於1。保護效果則是皆小於一。
+無論何種暴露方式，都使用「累積相對風險」與「特定溫度、時間之相對風險」來觀察時間、主要氣象因子對因精神異常使用救護系統人數之風險。其目的是因為，累積相對風險可以針對總風險進行描述，但沒有詳細說明不同時間、變量的單位風險，當某一因子僅在特定時間點出現風險，總風險不一定會有顯著，因此才會利用特定溫度、時間之相對風險進行描述。
+3.研究成果3.1敘述性統計3.1.1日資料Table.1 Summary table - Daily variableVariableSampleBasic indexPercentilesNamesMethodTotal SizeZeroMissingSumMeanStandard DeviationMinimumMaximum25th50th75thPatientsSum255750202467.</description>
+    </item>
+    
+  </channel>
+</rss>

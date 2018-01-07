@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R 教學 - CH03 迴圈</title>
+<meta name="description" content="try to work this out.......">
+<meta name="generator" content="Hugo 0.32.2" />
+<meta property="og:title" content="R 教學 - CH03 迴圈" />
+<meta property="og:description" content="迴圈 在R當中也三種迴圈：for、while、repeat，同時有break與next可以改變迴圈狀態。
+For 迴圈 迴圈是用來執行重複的工作，告知電腦必需重複幾次或根據什麼重複，電腦就可以按照要求的指令重複工作。
+假設今天要計算1到10的總和，則需要一串1到10的數列。 因此先定義序列s為1到10，同時用一個為0的sums物件代表加總的總和。
+s=1:10 sums=0 迴圈的工作就是每次把sums按照順序加上數列s的其中一個數字，得到的答案命名為新的sums。 也就是： 第一次迴圈，此時sums為0 sums=sums&#43;1 第二次迴圈，此時sums為1 sums=sums&#43;2 以此類堆…
+因此定義for根據i來重複工作，重複的順序為：第1到第10個數值。 工作為sums=sums&#43;s[i]，s為數列，i表示s數列中的某一個數值。
+for(i in 1:10){ sums=sums&#43;s[i] } sums ## [1] 55   " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/post/r-%E6%95%99%E5%AD%B8-ch03-%E8%BF%B4%E5%9C%88/" />
+
+
+
+<meta property="article:published_time" content="2017-08-30T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2017-08-30T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+<link rel="dns-prefetch" href="//fonts.gstatic.com" />
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700" type="text/css" media="all" />
+<link rel="stylesheet" href="/css/style.css" type="text/css" media="all" />
+<script type="text/javascript" src="/js/scripts.js"></script>
+<link rel="shortcut icon" href="/favicon.ico">
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-112058330-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body class="body body-right-sidebar mobile" itemscope="itemscope" itemtype="http://schema.org/WebPage">
+	<div class="container container-outer">
+		<header class="header" itemscope="itemscope" itemtype="http://schema.org/WPHeader">
+			<div class="container container-inner clearfix">
+				<div class="logo" role="banner" itemscope="itemscope" itemtype="http://schema.org/Brand">
+					<a class="logo__link" href="/" title="魚缸" rel="home">
+						<h1 class="logo__title">魚缸</h1>
+						<h2 class="logo__tagline">fish site</h2>
+					</a>
+				</div>
+			</div>
+			
+<nav class="menu" itemscope="itemscope" itemtype="http://schema.org/SiteNavigationElement">
+	<ul class="menu__list">
+		<li class="menu__item"><a class="menu__link" href="/about/">ABOUT HUGO</a></li>
+	</ul>
+</nav>
+
+		</header>
+		<div class="wrapper clearfix">
+
+<main class="main-content content" role="main" itemprop="mainContentOfPage">
+	<article class="post">
+		<header class="post__header clearfix">
+			<h1 class="post__title">R 教學 - CH03 迴圈</h1>
+			<p class="post__meta meta">
+				<svg class="icon icon-time" height="14" viewBox="0 0 16 16" width="14" xmlns="http://www.w3.org/2000/svg"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+				<time class="post__meta-date" datetime="2017-08-30T00:00:00">August 30, 2017</time>
+				<span class="post__meta-categories meta-categories">
+					<svg class="icon icon-category" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+					<a class="meta-categories__link" href="/categories/r-tutorial" rel="category">R tutorial</a></span>
+			</p>
+		</header>
+		<div class="post__content clearfix">
+			<div class="section level1">
+<h1>迴圈</h1>
+<hr />
+<p>在R當中也三種迴圈：for、while、repeat，同時有break與next可以改變迴圈狀態。</p>
+<div id="for-" class="section level2">
+<h2>For 迴圈</h2>
+<hr />
+<p>迴圈是用來執行重複的工作，告知電腦必需重複幾次或根據什麼重複，電腦就可以按照要求的指令重複工作。</p>
+<p>假設今天要計算1到10的總和，則需要一串1到10的數列。 因此先定義序列s為1到10，同時用一個為0的sums物件代表加總的總和。</p>
+<pre class="r"><code>s=1:10
+sums=0</code></pre>
+<p>迴圈的工作就是每次把sums按照順序加上數列s的其中一個數字，得到的答案命名為新的sums。 也就是： 第一次迴圈，此時sums為0 sums=sums+1 第二次迴圈，此時sums為1 sums=sums+2 以此類堆…</p>
+<p>因此定義for根據i來重複工作，重複的順序為：第1到第10個數值。 工作為sums=sums+s[i]，s為數列，i表示s數列中的某一個數值。</p>
+<pre class="r"><code>for(i in 1:10){
+sums=sums+s[i]
+}
+sums</code></pre>
+<pre><code>## [1] 55</code></pre>
+</div>
+</div>
+
+		</div>
+		
+<div class="post__tags tags clearfix">
+	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="m4.73135 3.3795002q0-.5597-.39604-.9557-.39604-.3961-.95577-.3961-.55974 0-.95578.3961-.39604.396-.39604.9557 0 .5598.39604.9558.39604.3961.95578.3961.55973 0 .95577-.3961.39604-.396.39604-.9558zm11.26865 6.0832q0 .5596998-.39076.9504998l-5.18548 5.196q-.41188.3908-.9610504.3908-.55974 0-.9505-.3908l-7.5511496-7.5616998q-.40132-.3907-.68119-1.0666-.27987-.6759-.27987-1.2357v-4.3934q0-.54920004.40132-.95050004.40132-.4013.9505-.4013h4.39339q.55974 0 1.23565.2799.67591.2798 1.07723.6812l7.55115 7.54060004q.39076.4118.39076.961z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item"><a class="tags__link" href="/tags/r/" rel="tag">R</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/tutorial/" rel="tag">tutorial</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/for/" rel="tag">for</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/apply/" rel="tag">apply</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/%E8%BF%B4%E5%9C%88/" rel="tag">迴圈</a></li>
+	</ul>
+</div>
+
+	</article>
+	
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="fish ko avatar" src="/img/inuyasha%20.JPG" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About fish ko</span>
+	</div>
+	<div class="authorbox__description">
+		try to work this out.......
+	</div>
+</div>
+	
+<nav class="post-nav row clearfix" itemscope="itemscope" itemtype="http://schema.org/SiteNavigationElement">
+	<div class="post-nav__item post-nav__item--prev col-1-2">
+		<a class="post-nav__link" href="/post/r-%E6%95%99%E5%AD%B8-ch02-%E5%AD%98%E5%8F%96%E8%B3%87%E6%96%99/" rel="prev"><span class="post-nav__caption">«Previous</span><p class="post-nav__post-title">R 教學 - CH02 存取資料</p></a>
+	</div>
+	<div class="post-nav__item post-nav__item--next col-1-2">
+		<a class="post-nav__link" href="/post/r-%E6%95%99%E5%AD%B8-ch04-%E8%B3%87%E6%96%99%E8%99%95%E7%90%86/" rel="next"><span class="post-nav__caption">Next»</span><p class="post-nav__post-title">R 教學 - CH04 資料處理</p></a>
+	</div>
+</nav>
+
+	
+<div class="comments">
+	<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "seimwiwa" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+<aside class="sidebar" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">
+	
+<div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="//google.com/search">
+		<label>
+			<span class="screen-reader-text">Search for:</span>
+			<input class="widget-search__field" type="search" placeholder="SEARCH..." value="" name="q">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+	
+<div class="widget-recent widget">
+	<h4 class="widget__title">Recent Posts</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/post/2018-01-07-health.risk.mental.issue.weather/">健康風險-天氣與精神異常</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch04-%E8%B3%87%E6%96%99%E8%99%95%E7%90%86/">R 教學 - CH04 資料處理</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch03-%E8%BF%B4%E5%9C%88/">R 教學 - CH03 迴圈</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch02-%E5%AD%98%E5%8F%96%E8%B3%87%E6%96%99/">R 教學 - CH02 存取資料</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch01-%E5%9F%BA%E6%9C%AC%E8%AA%9E%E6%B3%95/">R 教學 - CH01 基本語法</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch00-%E5%BC%95%E8%A8%80/">R 教學 - CH00 引言</a></li>
+		</ul>
+	</div>
+</div>
+
+	
+<div class="widget-categories widget">
+	<h4 class="widget__title">Categories</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/categories/r-tutorial">R-Tutorial</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/reserch">Reserch</a></li>
+		</ul>
+	</div>
+</div>
+	
+
+	
+<div class="widget-taglist widget">
+	<h4 class="widget__title">Tags</h4>
+	<div class="widget__content">
+		<a class="widget__link widget__link--taglist" href="/tags/apply" title="apply">apply</a>
+		<a class="widget__link widget__link--taglist" href="/tags/data.table" title="data.table">data.table</a>
+		<a class="widget__link widget__link--taglist" href="/tags/dlnm" title="dlnm">dlnm</a>
+		<a class="widget__link widget__link--taglist" href="/tags/dplyr" title="dplyr">dplyr</a>
+		<a class="widget__link widget__link--taglist" href="/tags/for" title="for">for</a>
+		<a class="widget__link widget__link--taglist" href="/tags/health-risk-assessment" title="health-risk-assessment">health-risk-assessment</a>
+		<a class="widget__link widget__link--taglist" href="/tags/introduction" title="introduction">introduction</a>
+		<a class="widget__link widget__link--taglist" href="/tags/load" title="load">load</a>
+		<a class="widget__link widget__link--taglist" href="/tags/mental-issue" title="mental-issue">mental-issue</a>
+		<a class="widget__link widget__link--taglist" href="/tags/r" title="r">r</a>
+		<a class="widget__link widget__link--taglist" href="/tags/read" title="read">read</a>
+		<a class="widget__link widget__link--taglist" href="/tags/reshape" title="reshape">reshape</a>
+		<a class="widget__link widget__link--taglist" href="/tags/reshape2" title="reshape2">reshape2</a>
+		<a class="widget__link widget__link--taglist" href="/tags/save" title="save">save</a>
+		<a class="widget__link widget__link--taglist" href="/tags/tutorial" title="tutorial">tutorial</a>
+		<a class="widget__link widget__link--taglist" href="/tags/weather-effect" title="weather-effect">weather-effect</a>
+		<a class="widget__link widget__link--taglist" href="/tags/write" title="write">write</a>
+		<a class="widget__link widget__link--taglist" href="/tags/xls" title="xls">xls</a>
+		<a class="widget__link widget__link--taglist" href="/tags/xlsx" title="xlsx">xlsx</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%81%a5%e5%ba%b7%e9%a2%a8%e9%9a%aa%e8%a9%95%e4%bc%b0" title="健康風險評估">健康風險評估</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%84%b2%e5%ad%98%e5%9e%8b%e6%85%8b" title="儲存型態">儲存型態</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%a4%a9%e6%b0%a3" title="天氣">天氣</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%ad%98%e5%8f%96%e8%b3%87%e6%96%99" title="存取資料">存取資料</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e6%9f%a5%e7%9c%8b%e7%89%a9%e4%bb%b6" title="查看物件">查看物件</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e7%89%a9%e4%bb%b6%e5%ae%9a%e7%be%a9" title="物件定義">物件定義</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e7%b2%be%e7%a5%9e%e7%95%b0%e5%b8%b8" title="精神異常">精神異常</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e8%b3%87%e6%96%99%e7%89%a9%e4%bb%b6" title="資料物件">資料物件</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e8%bf%b4%e5%9c%88" title="迴圈">迴圈</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e9%81%8b%e7%ae%97" title="運算">運算</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e9%9d%9e%e7%b7%9a%e6%80%a7%e9%81%9e%e5%bb%b6%e6%a8%a1%e5%9e%8b" title="非線性遞延模型">非線性遞延模型</a>
+	</div>
+</div>
+</aside>
+
+	</div>
+		<footer class="footer" itemscope="itemscope" itemtype="http://schema.org/WPFooter">
+			<div class="container container-inner">
+				<p class="footer__copyright">&copy; 2018 魚缸. <span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad theme</a>.</span></p>
+			</div>
+		</footer>
+	</div>
+
+<script>
+	var navigation = responsiveNav(".menu", {
+		navClass: "menu--collapse",
+	});
+</script>
+</body>
+</html>

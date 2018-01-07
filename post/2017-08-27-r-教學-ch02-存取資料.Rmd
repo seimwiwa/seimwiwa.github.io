@@ -1,0 +1,230 @@
+---
+title: R 教學 - CH02 存取資料
+author: seimwiwa
+date: '2017-08-27'
+slug: r-教學-ch02-存取資料
+categories:
+  - R tutorial
+tags:
+  - R
+  - tutorial
+  - 存取資料
+  - write
+  - read
+  - save
+  - load
+  - xls
+  - xlsx
+---
+
+#存取資料
+
+***
+在R軟體中可以存取的資料種類眾多，因為R語言是不同的更新且可以由不同的開發人員提供函數開發的，因此絕大多數種類的檔案在R中都可以支援。此部分將一般讀取的資料分為三種型式：文字文件、R專用資料格式與特殊文件，辨識文件的種類一般透過副檔名來了解。
+
+  + 文字文件
+    通常文字文件的種類如：txt、csv等格式。txt可以是單純的字串格式，或者利用逗號空白tab等特殊符號區別資料；csv則是專門用逗點來紀錄資料格的。在此將所有能使用記事本開啟的資料稱為一般文字文件。
+
+  + R專用資料格式 
+    R專用的文件則是以附檔名rda或RData的形式存在。
+
+  + 特殊文件  
+    特殊文件的附檔名在此介紹Excel的xls與xlsx格式存取方法。
+
+##資料儲存
+
+***
+在此先製造一個資料集，最為儲存與讀取之用。
+假設有一個資料表dat其中有a、b、c三欄，共有十列，資料數值為1~10的亂數。
+
+~~~~~
+提示：
+sample函數將會在給予的資料中x中取樣
+
+常用命令：
+x 將要抽樣的資料
+size  取樣數量
+replace TRUE代表抽樣可以重複
+~~~~~
+```{r}
+dat=data.frame("a"=sample(x=1:10,size=10,replace=T),
+               "b"=sample(x=1:10,size=10,replace=T),
+               "c"=sample(x=1:10,size=10,replace=T))
+dat
+```
+
+###儲存一般文字文件
+將資料儲存成txt檔案，名稱為dat.txt，文字欄位使用tab來區別。
+
+~~~~~
+提示：
+write.table是一個輸出資料表的函數
+
+常用命令：
+x 代表要輸出的資料
+file  代表儲存的路徑
+append  為如果有同樣檔案的名稱是否要接續原有檔案向下填寫，要則設置為TRUE，當為FALSE則會覆寫檔案
+quote 為TRUE使欄位名稱與類別資料加上引號""避免特殊字元問題
+sep 為分隔字元
+na  可以用來註明遺失值用什麼方式記錄
+row.names TRUE表示輸出資料要記錄列名稱
+col.names TRUE表示輸出資料要記錄欄位名稱
+~~~~~
+
+```{r eval=F}
+write.table(x=dat,file="dat.txt",sep="\t",append=F,row.names = F,col.names=T)
+```
+
+將資料儲存成csv檔案，名稱為dat.csv，文字欄位使用逗號來區別。
+
+```{r eval=F}
+write.table(x=dat,file="dat.csv",sep=",",append=F,row.names = F,col.names=T)
+```
+
+也可以使用write.csv，直接以逗點為間格符號儲存，但此時append、row.names、sep皆無法使用。
+
+```{r eval=F}
+write.csv(x=dat,file="dat.csv")
+```
+
+##儲存R專用資料格式
+如果要儲存為rda格式則使用save，一定要註明file，不可以省略。
+
+~~~~~
+提示：
+save是一個輸出R專用資料紀錄的函數
+
+常用命令：
+x 代表要輸出的資料
+file  代表儲存的路徑
+~~~~~
+
+```{r eval=F}
+save(x=dat,file="dat.rda")
+```
+
+##儲存特殊文件
+如果要輸出xlsx檔案則需要安裝"xlsx"套件"
+因此先執行安裝
+
+~~~~~
+提示：
+install.packages用來安裝套件
+~~~~~
+
+```{r,eval=FALSE}
+install.packages("xlsx")
+```
+
+安裝完成後需要呼叫套件才可以使用
+
+~~~~~
+提示：
+library用來告知程式所要使用的套件
+~~~~~
+
+```{r,eval=FALSE}
+library(xlsx)
+```
+
+輸出xlsx檔案：
+
+~~~~~
+提示：
+write.xlsx可以輸出EXCEL的xlsx或xls檔案。
+
+常用命令：
+x 要輸出的資料
+file  輸出的路徑
+sheetName 活頁簿名稱
+col.names 是否顯示欄位名稱
+row.names 是否顯示列名稱
+append  是否進行覆寫
+showNA  是否要以NA顯示遺失值
+~~~~~
+
+```{r,eval=FALSE}
+write.xlsx(x=dat, file="dat.xlsx")
+```
+
+若要儲存為EXCEL 2003年檔案格式的xls檔案時，僅需修改路徑file中附檔名為xls則如下：
+
+```{r,eval=FALSE}
+write.xlsx(x=dat, file="dat.xls")
+```
+
+##資料匯入
+
+***
+
+要把資料匯入的時候，只需要將write改為read並指向一個物件。
+
+###匯入一般文字文件
+
+舉例來說，如果要將剛剛儲存的物件dat.txt讀取為dat2物件則需要：
+
+~~~~~
+提示：
+read.table可以讀取一般文字文件：
+
+常用命令：
+file  讀取檔案的路徑
+header  第一列是否為欄名稱
+sep 分隔字元
+quote 特殊字元的分開方式
+colClasses  每個欄位的資料儲存型態，如：colClasses=c("character","integer","logical")，表示第一到第三欄分別是字串、整數數字、邏輯
+stringsAsFactors  若讀取到文字是否轉換為Factor格式
+fill  當每一行列中資料數量不同時，fill=TRUE會將缺少的資料用空白補齊
+skip  跳過資料的前幾列
+nrows 限制最大讀取幾列
+~~~~~
+
+```{r eval=F}
+dat2=read.table(file="dat.txt",sep="\t",header=T)
+```
+
+如果要讀取csv可以使用read.table或read.csv
+
+```{r eval=F}
+dat2=read.table(file="dat.csv",sep=",",header=T)
+dat2=read.csv(file="dat.csv",header=T)
+
+```
+
+
+###匯入R專用資料格式
+將dat.rda讀取為dat2
+
+~~~~~
+提示：
+load會讀取rda或Rdata檔案。
+~~~~~
+
+```{r eval=F}
+dat2=load(file="dat.rda")
+```
+
+###匯入特殊文件
+
+~~~~~
+提示：
+read.xlsx用來讀取EXCEL的xlsx或xls檔案。
+
+常用命令：
+file  讀取檔案的路徑
+sheetIndex  活頁簿編號
+sheetName 活頁簿名稱
+rowIndex  指定讀取列，例如rowIndex=c(1,2,3,4,5)，就是讀取第1,2,3,4,5列
+colIndex  指定讀取欄，同rowIndex
+colClasses  每個欄位的資料儲存型態
+~~~~~
+
+```{r,eval=FALSE}
+dat2=read.xlsx(file="dat.xlsx",sheetIndex=1,rowIndex=1:3)
+```
+
+若要讀取xls檔案時則如下：
+
+```{r,eval=FALSE}
+dat2=read.xlsx(file="dat.xls",sheetIndex=1)
+```

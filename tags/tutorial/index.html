@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutorial</title>
+<meta name="description" content="try to work this out.......">
+<meta name="generator" content="Hugo 0.32.2" />
+<meta property="og:title" content="Tutorial" />
+<meta property="og:description" content="try to work this out......." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="/tags/tutorial/" />
+
+
+
+<meta property="og:updated_time" content="2017-08-31T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+<link rel="dns-prefetch" href="//fonts.gstatic.com" />
+<link rel="alternate" type="application/rss+xml" title="魚缸 Feed" href="/tags/tutorial/index.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700" type="text/css" media="all" />
+<link rel="stylesheet" href="/css/style.css" type="text/css" media="all" />
+<script type="text/javascript" src="/js/scripts.js"></script>
+<link rel="shortcut icon" href="/favicon.ico">
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-112058330-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body class="body body-right-sidebar mobile" itemscope="itemscope" itemtype="http://schema.org/WebPage">
+	<div class="container container-outer">
+		<header class="header" itemscope="itemscope" itemtype="http://schema.org/WPHeader">
+			<div class="container container-inner clearfix">
+				<div class="logo" role="banner" itemscope="itemscope" itemtype="http://schema.org/Brand">
+					<a class="logo__link" href="/" title="魚缸" rel="home">
+						<h1 class="logo__title">魚缸</h1>
+						<h2 class="logo__tagline">fish site</h2>
+					</a>
+				</div>
+			</div>
+			
+<nav class="menu" itemscope="itemscope" itemtype="http://schema.org/SiteNavigationElement">
+	<ul class="menu__list">
+		<li class="menu__item"><a class="menu__link" href="/about/">ABOUT HUGO</a></li>
+	</ul>
+</nav>
+
+		</header>
+		<div class="wrapper clearfix">
+
+	<main class="main-content list content" role="main">
+		<header class="page-header">
+			<h1 class="page-header__title">Tutorial</h1>
+		</header><article class="list__item post clearfix">
+	<div class="list__content clearfix">
+		<header class="list__header">
+			<h3 class="list__title post__title ">
+				<a href="/post/r-%E6%95%99%E5%AD%B8-ch04-%E8%B3%87%E6%96%99%E8%99%95%E7%90%86/" rel="bookmark">R 教學 - CH04 資料處理</a>
+			</h3>
+			<div class="list__meta meta">
+				<svg class="icon icon-time" height="14" viewBox="0 0 16 16" width="14" xmlns="http://www.w3.org/2000/svg"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+				<time class="list__meta-date" datetime="2017-08-31T00:00:00">August 31, 2017</time>
+			</div>
+		</header>
+		<div class="list__excerpt">
+			資料處理 在此總共會介紹數個不同的方法來完成資料處理。 其中包含原本內建的函數與四個套件：reshape、reshape2、dplyr、data.table中的函數。 個別的工作是：
+reshape：用兩個簡單的函數：melt與cast來靈活的改變資料結構。
+reshape2：用兩個簡單的函數：melt與dcast來靈活的改變資料結構。
+dplyr：快速有秩並節省記憶體空間的處理資料結構。
+而reshape與reshape2的差異很小，只在reshape中的cast只能用來處理數字，reshape2的dcast可以處理數字及文字。
+以下分成：資料合併、欄轉列、列轉欄、轉置文字資料、資料排列、資料篩選、欄位計算、資料整併來介紹
+資料合併 設有兩筆資料如下dat.a與dat.b。 dat.a紀載類別與數值，dat.b紀載不同類別的日期。
+dat.a=data.frame(class=c(&quot;A&quot;,&quot;B&quot;,&quot;A&quot;,&quot;A&quot;,&quot;B&quot;,&quot;C&quot;),values=c(sample(x=1:10,size=6))) dat.a ## class values ## 1 A 6 ## 2 B 3 ## 3 A 4 ## 4 A 7 ## 5 B 1 ## 6 C 9 dat.b=data.frame(class=c(&quot;A&quot;,&quot;B&quot;,&quot;D&quot;),date=c(&quot;2000-01-05&quot;,&quot;2015-01-05&quot;,&quot;2015-02-05&quot;)) dat.b ## class date ## 1 A 2000-01-05 ## 2 B 2015-01-05 ## 3 D 2015-02-05 最終希望資料可以合成如下，即是依照class分類來合併兩筆資料，在新資料中能顯示不同類別的日期。
+## class values date ## 1 A 6 2000-01-05 ## 2 A 4 2000-01-05 ## 3 A 7 2000-01-05 ## 4 B 3 2015-01-05 ## 5 B 1 2015-01-05 因此我們需要用到merge這個函數
+		</div>
+	</div>
+</article>
+<article class="list__item post clearfix">
+	<div class="list__content clearfix">
+		<header class="list__header">
+			<h3 class="list__title post__title ">
+				<a href="/post/r-%E6%95%99%E5%AD%B8-ch03-%E8%BF%B4%E5%9C%88/" rel="bookmark">R 教學 - CH03 迴圈</a>
+			</h3>
+			<div class="list__meta meta">
+				<svg class="icon icon-time" height="14" viewBox="0 0 16 16" width="14" xmlns="http://www.w3.org/2000/svg"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+				<time class="list__meta-date" datetime="2017-08-30T00:00:00">August 30, 2017</time>
+			</div>
+		</header>
+		<div class="list__excerpt">
+			迴圈 在R當中也三種迴圈：for、while、repeat，同時有break與next可以改變迴圈狀態。
+For 迴圈 迴圈是用來執行重複的工作，告知電腦必需重複幾次或根據什麼重複，電腦就可以按照要求的指令重複工作。
+假設今天要計算1到10的總和，則需要一串1到10的數列。 因此先定義序列s為1到10，同時用一個為0的sums物件代表加總的總和。
+s=1:10 sums=0 迴圈的工作就是每次把sums按照順序加上數列s的其中一個數字，得到的答案命名為新的sums。 也就是： 第一次迴圈，此時sums為0 sums=sums+1 第二次迴圈，此時sums為1 sums=sums+2 以此類堆…
+因此定義for根據i來重複工作，重複的順序為：第1到第10個數值。 工作為sums=sums+s[i]，s為數列，i表示s數列中的某一個數值。
+for(i in 1:10){ sums=sums+s[i] } sums ## [1] 55   
+		</div>
+	</div>
+</article>
+<article class="list__item post clearfix">
+	<div class="list__content clearfix">
+		<header class="list__header">
+			<h3 class="list__title post__title ">
+				<a href="/post/r-%E6%95%99%E5%AD%B8-ch02-%E5%AD%98%E5%8F%96%E8%B3%87%E6%96%99/" rel="bookmark">R 教學 - CH02 存取資料</a>
+			</h3>
+			<div class="list__meta meta">
+				<svg class="icon icon-time" height="14" viewBox="0 0 16 16" width="14" xmlns="http://www.w3.org/2000/svg"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+				<time class="list__meta-date" datetime="2017-08-27T00:00:00">August 27, 2017</time>
+			</div>
+		</header>
+		<div class="list__excerpt">
+			存取資料 在R軟體中可以存取的資料種類眾多，因為R語言是不同的更新且可以由不同的開發人員提供函數開發的，因此絕大多數種類的檔案在R中都可以支援。此部分將一般讀取的資料分為三種型式：文字文件、R專用資料格式與特殊文件，辨識文件的種類一般透過副檔名來了解。
+ 文字文件 通常文字文件的種類如：txt、csv等格式。txt可以是單純的字串格式，或者利用逗號空白tab等特殊符號區別資料；csv則是專門用逗點來紀錄資料格的。在此將所有能使用記事本開啟的資料稱為一般文字文件。
+ R專用資料格式 R專用的文件則是以附檔名rda或RData的形式存在。
+ 特殊文件
+特殊文件的附檔名在此介紹Excel的xls與xlsx格式存取方法。
+  資料儲存 在此先製造一個資料集，最為儲存與讀取之用。 假設有一個資料表dat其中有a、b、c三欄，共有十列，資料數值為1~10的亂數。
+提示： sample函數將會在給予的資料中x中取樣 常用命令： x 將要抽樣的資料 size 取樣數量 replace TRUE代表抽樣可以重複 dat=data.frame(&quot;a&quot;=sample(x=1:10,size=10,replace=T), &quot;b&quot;=sample(x=1:10,size=10,replace=T), &quot;c&quot;=sample(x=1:10,size=10,replace=T)) dat ## a b c ## 1 1 1 3 ## 2 3 7 5 ## 3 5 9 2 ## 4 5 1 8 ## 5 6 6 8 ## 6 2 4 1 ## 7 7 10 7 ## 8 8 8 2 ## 9 4 10 3 ## 10 2 9 4 儲存一般文字文件 將資料儲存成txt檔案，名稱為dat.
+		</div>
+	</div>
+</article>
+<article class="list__item post clearfix">
+	<div class="list__content clearfix">
+		<header class="list__header">
+			<h3 class="list__title post__title ">
+				<a href="/post/r-%E6%95%99%E5%AD%B8-ch01-%E5%9F%BA%E6%9C%AC%E8%AA%9E%E6%B3%95/" rel="bookmark">R 教學 - CH01 基本語法</a>
+			</h3>
+			<div class="list__meta meta">
+				<svg class="icon icon-time" height="14" viewBox="0 0 16 16" width="14" xmlns="http://www.w3.org/2000/svg"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+				<time class="list__meta-date" datetime="2017-08-26T00:00:00">August 26, 2017</time>
+			</div>
+		</header>
+		<div class="list__excerpt">
+			基本語法 本章節主要談論五個基本觀念：物件定義、運算、儲存型態、資料物件、查看物件。
+物件定義 在R中要定義物件時有兩種符號可以使用，分別是=與&lt;-。
+若要定義物件a為數字1可輸入：
+a&lt;-1 當要查看物件a時則呼叫a，系統就會顯示a所代表之數據。：
+a ## [1] 1 若要定義物件b為數字2也可以輸入：
+b&lt;-2 查看物件b
+b ## [1] 2 a=c(1,2,3,4,5) 提示： 當定義的物件是一串識字或文字的時候，使用c()，表達其為一個向量。c是一個將物件結合成向量或清單的函數，c()函數中放入的即是要結合為向量或清單的物件。 查看物件a
+a ## [1] 1 2 3 4 5 定義物件b是一個包含aa,bb,cc的文字向量：
+b=c(&quot;aa&quot;,&quot;bb&quot;,&quot;cc&quot;) 提示： 在R中文字與數字的區別是數字將不會使用引號：””、’’，文字則使用引號””、’’，在R中若沒有使用引號的文字會被判定為物件，但數字使用引號時則被定義為文字。 查看b物件
+b ## [1] &quot;aa&quot; &quot;bb&quot; &quot;cc&quot;  運算 R中的算術運算符號有下面幾種：
+ 相加：+
+ 相減：-
+ 相乘：*
+ 相除：/
+ 指數：^ 或 ** 取餘數：x %% y
+ 取商數：x %/% y  定義物件a與b為1與2：
+a=1;b=2 定義物件c為物件a、b之合：
+c=a+b 查看物件c
+c ## [1] 3 計算物件a、b之差：
+		</div>
+	</div>
+</article>
+<article class="list__item post clearfix">
+	<div class="list__content clearfix">
+		<header class="list__header">
+			<h3 class="list__title post__title ">
+				<a href="/post/r-%E6%95%99%E5%AD%B8-ch00-%E5%BC%95%E8%A8%80/" rel="bookmark">R 教學 - CH00 引言</a>
+			</h3>
+			<div class="list__meta meta">
+				<svg class="icon icon-time" height="14" viewBox="0 0 16 16" width="14" xmlns="http://www.w3.org/2000/svg"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+				<time class="list__meta-date" datetime="2017-08-25T00:00:00">August 25, 2017</time>
+			</div>
+		</header>
+		<div class="list__excerpt">
+			引言 由於肉體的怠惰與情緒的優擾，目前僅針對部分章節進行撰寫。
+統計底子不好，僅介紹使用方法、語法、如何解釋數據，不觸碰原理。
+預計將會針對R語言進行基礎的介紹。目前設定之教學如下章節目錄所示。
+ 章節目錄 基本語法  物件定義
+ 運算
+ 儲存型態
+ 資料物件
+ 查看物件  存取資料  匯入一般文字文件
+ 匯入R專用資料格式
+ 匯入特殊文件
+ 儲存一般文字文件
+ 儲存R專用資料格式
+ 儲存特殊文件  迴圈  For迴圈  資料處理  資料合併
+ 欄轉列 列轉欄 轉置文字資料
+ 資料排列
+ 資料篩選
+ 欄位計算
+ 資料整併  敘述性統計指標  平均值 變異數 標準差 最小值 最大值 百分位值
+ 95%區間數值 偏度
+ 峰度
+ 表格統整並建立指標  統計分析  皮爾森相關係數 T檢定 卡方檢定
+		</div>
+	</div>
+</article>
+
+
+		
+	</main>
+
+<aside class="sidebar" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">
+	
+<div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="//google.com/search">
+		<label>
+			<span class="screen-reader-text">Search for:</span>
+			<input class="widget-search__field" type="search" placeholder="SEARCH..." value="" name="q">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+	
+<div class="widget-recent widget">
+	<h4 class="widget__title">Recent Posts</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/post/2018-01-07-health.risk.mental.issue.weather/">健康風險-天氣與精神異常</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch04-%E8%B3%87%E6%96%99%E8%99%95%E7%90%86/">R 教學 - CH04 資料處理</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch03-%E8%BF%B4%E5%9C%88/">R 教學 - CH03 迴圈</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch02-%E5%AD%98%E5%8F%96%E8%B3%87%E6%96%99/">R 教學 - CH02 存取資料</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch01-%E5%9F%BA%E6%9C%AC%E8%AA%9E%E6%B3%95/">R 教學 - CH01 基本語法</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch00-%E5%BC%95%E8%A8%80/">R 教學 - CH00 引言</a></li>
+		</ul>
+	</div>
+</div>
+
+	
+<div class="widget-categories widget">
+	<h4 class="widget__title">Categories</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/categories/r-tutorial">R-Tutorial</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/reserch">Reserch</a></li>
+		</ul>
+	</div>
+</div>
+	
+
+	
+<div class="widget-taglist widget">
+	<h4 class="widget__title">Tags</h4>
+	<div class="widget__content">
+		<a class="widget__link widget__link--taglist" href="/tags/apply" title="apply">apply</a>
+		<a class="widget__link widget__link--taglist" href="/tags/data.table" title="data.table">data.table</a>
+		<a class="widget__link widget__link--taglist" href="/tags/dlnm" title="dlnm">dlnm</a>
+		<a class="widget__link widget__link--taglist" href="/tags/dplyr" title="dplyr">dplyr</a>
+		<a class="widget__link widget__link--taglist" href="/tags/for" title="for">for</a>
+		<a class="widget__link widget__link--taglist" href="/tags/health-risk-assessment" title="health-risk-assessment">health-risk-assessment</a>
+		<a class="widget__link widget__link--taglist" href="/tags/introduction" title="introduction">introduction</a>
+		<a class="widget__link widget__link--taglist" href="/tags/load" title="load">load</a>
+		<a class="widget__link widget__link--taglist" href="/tags/mental-issue" title="mental-issue">mental-issue</a>
+		<a class="widget__link widget__link--taglist" href="/tags/r" title="r">r</a>
+		<a class="widget__link widget__link--taglist" href="/tags/read" title="read">read</a>
+		<a class="widget__link widget__link--taglist" href="/tags/reshape" title="reshape">reshape</a>
+		<a class="widget__link widget__link--taglist" href="/tags/reshape2" title="reshape2">reshape2</a>
+		<a class="widget__link widget__link--taglist" href="/tags/save" title="save">save</a>
+		<a class="widget__link widget__link--taglist" href="/tags/tutorial" title="tutorial">tutorial</a>
+		<a class="widget__link widget__link--taglist" href="/tags/weather-effect" title="weather-effect">weather-effect</a>
+		<a class="widget__link widget__link--taglist" href="/tags/write" title="write">write</a>
+		<a class="widget__link widget__link--taglist" href="/tags/xls" title="xls">xls</a>
+		<a class="widget__link widget__link--taglist" href="/tags/xlsx" title="xlsx">xlsx</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%81%a5%e5%ba%b7%e9%a2%a8%e9%9a%aa%e8%a9%95%e4%bc%b0" title="健康風險評估">健康風險評估</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%84%b2%e5%ad%98%e5%9e%8b%e6%85%8b" title="儲存型態">儲存型態</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%a4%a9%e6%b0%a3" title="天氣">天氣</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%ad%98%e5%8f%96%e8%b3%87%e6%96%99" title="存取資料">存取資料</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e6%9f%a5%e7%9c%8b%e7%89%a9%e4%bb%b6" title="查看物件">查看物件</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e7%89%a9%e4%bb%b6%e5%ae%9a%e7%be%a9" title="物件定義">物件定義</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e7%b2%be%e7%a5%9e%e7%95%b0%e5%b8%b8" title="精神異常">精神異常</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e8%b3%87%e6%96%99%e7%89%a9%e4%bb%b6" title="資料物件">資料物件</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e8%bf%b4%e5%9c%88" title="迴圈">迴圈</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e9%81%8b%e7%ae%97" title="運算">運算</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e9%9d%9e%e7%b7%9a%e6%80%a7%e9%81%9e%e5%bb%b6%e6%a8%a1%e5%9e%8b" title="非線性遞延模型">非線性遞延模型</a>
+	</div>
+</div>
+</aside>
+
+	</div>
+		<footer class="footer" itemscope="itemscope" itemtype="http://schema.org/WPFooter">
+			<div class="container container-inner">
+				<p class="footer__copyright">&copy; 2018 魚缸. <span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad theme</a>.</span></p>
+			</div>
+		</footer>
+	</div>
+
+<script>
+	var navigation = responsiveNav(".menu", {
+		navClass: "menu--collapse",
+	});
+</script>
+</body>
+</html>

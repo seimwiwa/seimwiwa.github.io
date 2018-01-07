@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R 教學 - CH01 基本語法</title>
+<meta name="description" content="try to work this out.......">
+<meta name="generator" content="Hugo 0.32.2" />
+<meta property="og:title" content="R 教學 - CH01 基本語法" />
+<meta property="og:description" content="基本語法 本章節主要談論五個基本觀念：物件定義、運算、儲存型態、資料物件、查看物件。
+物件定義 在R中要定義物件時有兩種符號可以使用，分別是=與&lt;-。
+若要定義物件a為數字1可輸入：
+a&lt;-1 當要查看物件a時則呼叫a，系統就會顯示a所代表之數據。：
+a ## [1] 1 若要定義物件b為數字2也可以輸入：
+b&lt;-2 查看物件b
+b ## [1] 2 a=c(1,2,3,4,5) 提示： 當定義的物件是一串識字或文字的時候，使用c()，表達其為一個向量。c是一個將物件結合成向量或清單的函數，c()函數中放入的即是要結合為向量或清單的物件。 查看物件a
+a ## [1] 1 2 3 4 5 定義物件b是一個包含aa,bb,cc的文字向量：
+b=c(&quot;aa&quot;,&quot;bb&quot;,&quot;cc&quot;) 提示： 在R中文字與數字的區別是數字將不會使用引號：””、’’，文字則使用引號””、’’，在R中若沒有使用引號的文字會被判定為物件，但數字使用引號時則被定義為文字。 查看b物件
+b ## [1] &quot;aa&quot; &quot;bb&quot; &quot;cc&quot;  運算 R中的算術運算符號有下面幾種：
+ 相加：&#43;
+ 相減：-
+ 相乘：*
+ 相除：/
+ 指數：^ 或 ** 取餘數：x %% y
+ 取商數：x %/% y  定義物件a與b為1與2：
+a=1;b=2 定義物件c為物件a、b之合：
+c=a&#43;b 查看物件c
+c ## [1] 3 計算物件a、b之差：" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/post/r-%E6%95%99%E5%AD%B8-ch01-%E5%9F%BA%E6%9C%AC%E8%AA%9E%E6%B3%95/" />
+
+
+
+<meta property="article:published_time" content="2017-08-26T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2017-08-26T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+<link rel="dns-prefetch" href="//fonts.gstatic.com" />
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700" type="text/css" media="all" />
+<link rel="stylesheet" href="/css/style.css" type="text/css" media="all" />
+<script type="text/javascript" src="/js/scripts.js"></script>
+<link rel="shortcut icon" href="/favicon.ico">
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-112058330-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body class="body body-right-sidebar mobile" itemscope="itemscope" itemtype="http://schema.org/WebPage">
+	<div class="container container-outer">
+		<header class="header" itemscope="itemscope" itemtype="http://schema.org/WPHeader">
+			<div class="container container-inner clearfix">
+				<div class="logo" role="banner" itemscope="itemscope" itemtype="http://schema.org/Brand">
+					<a class="logo__link" href="/" title="魚缸" rel="home">
+						<h1 class="logo__title">魚缸</h1>
+						<h2 class="logo__tagline">fish site</h2>
+					</a>
+				</div>
+			</div>
+			
+<nav class="menu" itemscope="itemscope" itemtype="http://schema.org/SiteNavigationElement">
+	<ul class="menu__list">
+		<li class="menu__item"><a class="menu__link" href="/about/">ABOUT HUGO</a></li>
+	</ul>
+</nav>
+
+		</header>
+		<div class="wrapper clearfix">
+
+<main class="main-content content" role="main" itemprop="mainContentOfPage">
+	<article class="post">
+		<header class="post__header clearfix">
+			<h1 class="post__title">R 教學 - CH01 基本語法</h1>
+			<p class="post__meta meta">
+				<svg class="icon icon-time" height="14" viewBox="0 0 16 16" width="14" xmlns="http://www.w3.org/2000/svg"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+				<time class="post__meta-date" datetime="2017-08-26T00:00:00">August 26, 2017</time>
+				<span class="post__meta-categories meta-categories">
+					<svg class="icon icon-category" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+					<a class="meta-categories__link" href="/categories/r-tutorial" rel="category">R tutorial</a></span>
+			</p>
+		</header>
+		<div class="post__content clearfix">
+			<div class="section level1">
+<h1>基本語法</h1>
+<hr />
+<p>本章節主要談論五個基本觀念：物件定義、運算、儲存型態、資料物件、查看物件。</p>
+<div class="section level2">
+<h2>物件定義</h2>
+<hr />
+<p>在R中要定義物件時有兩種符號可以使用，分別是<strong>=</strong>與<strong>&lt;-</strong>。</p>
+<p>若要定義物件a為數字1可輸入：</p>
+<pre class="r"><code>a&lt;-1</code></pre>
+<p>當要查看物件a時則呼叫a，系統就會顯示a所代表之數據。：</p>
+<pre class="r"><code>a</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p>若要定義物件b為數字2也可以輸入：</p>
+<pre class="r"><code>b&lt;-2</code></pre>
+<p>查看物件b</p>
+<pre class="r"><code>b</code></pre>
+<pre><code>## [1] 2</code></pre>
+<pre class="r"><code>a=c(1,2,3,4,5)</code></pre>
+<pre><code>提示：
+當定義的物件是一串識字或文字的時候，使用c()，表達其為一個向量。c是一個將物件結合成向量或清單的函數，c()函數中放入的即是要結合為向量或清單的物件。</code></pre>
+<p>查看物件a</p>
+<pre class="r"><code>a</code></pre>
+<pre><code>## [1] 1 2 3 4 5</code></pre>
+<p>定義物件b是一個包含aa,bb,cc的文字向量：</p>
+<pre class="r"><code>b=c(&quot;aa&quot;,&quot;bb&quot;,&quot;cc&quot;)</code></pre>
+<pre><code>提示：
+在R中文字與數字的區別是數字將不會使用引號：””、’’，文字則使用引號””、’’，在R中若沒有使用引號的文字會被判定為物件，但數字使用引號時則被定義為文字。</code></pre>
+<p>查看b物件</p>
+<pre class="r"><code>b</code></pre>
+<pre><code>## [1] &quot;aa&quot; &quot;bb&quot; &quot;cc&quot;</code></pre>
+</div>
+<div class="section level2">
+<h2>運算</h2>
+<hr />
+<p>R中的算術運算符號有下面幾種：</p>
+<ul>
+<li>相加：+<br />
+</li>
+<li>相減：-<br />
+</li>
+<li>相乘：*<br />
+</li>
+<li>相除：/<br />
+</li>
+<li>指數：^ 或 **</li>
+<li>取餘數：x %% y<br />
+</li>
+<li>取商數：x %/% y</li>
+</ul>
+<p>定義物件a與b為1與2：</p>
+<pre class="r"><code>a=1;b=2</code></pre>
+<p>定義物件c為物件a、b之合：</p>
+<pre class="r"><code>c=a+b</code></pre>
+<p>查看物件c</p>
+<pre class="r"><code>c</code></pre>
+<pre><code>## [1] 3</code></pre>
+<p>計算物件a、b之差：</p>
+<pre class="r"><code>a-b</code></pre>
+<pre><code>## [1] -1</code></pre>
+<p>計算物件a、b之積：</p>
+<pre class="r"><code>a*b</code></pre>
+<pre><code>## [1] 2</code></pre>
+<p>計算a、b物件相除：</p>
+<pre class="r"><code>a/b</code></pre>
+<pre><code>## [1] 0.5</code></pre>
+<p>除了數學運算的符號，還可能需要邏輯運算，下面是R中的邏輯運算符號：</p>
+<ul>
+<li>小於：&lt;</li>
+<li>小於等於：&lt;=<br />
+</li>
+<li>大於：&gt;</li>
+<li>大於等於：&gt;=<br />
+</li>
+<li>相等：==<br />
+</li>
+<li>不相等：!=</li>
+</ul>
+<p>計算a是否小於b：</p>
+<pre class="r"><code>a&lt;b</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre><code>提示：
+在R中TRUE與FALSE是邏輯向量，可以被表示為T或F。而TRUE表示計算的內容為真；反之為假。</code></pre>
+<p>計算a是否小於等於b：</p>
+<pre class="r"><code>a&lt;=b</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>計算a是否大於b：</p>
+<pre class="r"><code>a&gt;b</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<p>計算a是否大於等於b：</p>
+<pre class="r"><code>a&gt;=b</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<p>計算a、b是否相等：</p>
+<pre class="r"><code>a==b</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+</div>
+<div class="section level2">
+<h2>儲存型態</h2>
+<hr />
+<p>R中有許多種儲存資料的型態一般常見到的有四種：</p>
+<p>整數：Integer 數字：Numeric 文字：Character 邏輯：Logical</p>
+<p>另外也有雙精度浮點數double、複數complex等，但很少用到。</p>
+<p>將a定義為文字1</p>
+<pre class="r"><code>a=&quot;1&quot;</code></pre>
+<p>此時若將a物件與1相加，則出現錯誤，因為a是一個文字：</p>
+<pre class="r"><code>a+1</code></pre>
+<pre><code>## Error in a + 1: 二元運算子中有非數值引數</code></pre>
+<p>可以使用class來查看a的資料儲存類型：</p>
+<pre><code>提示：
+class是察看物件儲存型態的工具，class()函數內放置的就是想要知道儲存型態的物件。</code></pre>
+<pre class="r"><code>class(a)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<p>定義b為數字1：</p>
+<pre class="r"><code>b=1</code></pre>
+<p>查看b的資料類型：</p>
+<pre class="r"><code>class(b)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<p>定義a為邏輯，真：</p>
+<pre class="r"><code>a=TRUE</code></pre>
+<p>查看a</p>
+<pre class="r"><code>a</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>查看a的資料類型：</p>
+<pre class="r"><code>class(a)</code></pre>
+<pre><code>## [1] &quot;logical&quot;</code></pre>
+</div>
+<div class="section level2">
+<h2>資料物件</h2>
+<hr />
+<p>上述的資料儲存類型：整數、數字、文字、邏輯可以被收納在資料物件之中，而種資料物件可以是一個向量vector、矩陣matrix、資料格data.frame、清單list等等。</p>
+<p>定義a為一個向量，其中包含1,3,5,7,9等數字：</p>
+<pre class="r"><code>a=c(1,3,5,7,9)
+a</code></pre>
+<pre><code>## [1] 1 3 5 7 9</code></pre>
+<p>定義a為一個包含數字1到5的向量：</p>
+<pre><code>提示：
+在數字間的運算時如果使用:可以代表一數列，其起始與終結的數字則在:的左右兩側。</code></pre>
+<pre class="r"><code>a=1:5
+a</code></pre>
+<pre><code>## [1] 1 2 3 4 5</code></pre>
+<p>使用seq定義數列a從1開始到5，每個數字間格為0.5：</p>
+<pre><code>提示：
+seq是產生數列函數
+
+其中常用的命令包含：
+from  起始值  
+to  終結值  
+by  間隔值  
+length.out  輸出數列長度  </code></pre>
+<pre class="r"><code>a=seq(from=1,to=5,by=0.5)
+a</code></pre>
+<pre><code>## [1] 1.0 1.5 2.0 2.5 3.0 3.5 4.0 4.5 5.0</code></pre>
+<p>使用matrix創建一個矩陣物件a，矩陣包含5列5行，數值填滿為0.5。</p>
+<pre><code>提示：
+matrix是一個用給定的值製造矩陣的函數
+可以用as.matrix()來改變物件種類為矩陣
+或用is.matrix()來查看物件是否為矩陣
+
+其中常用的命令包含：
+data  輸入的向量資料
+nrow  列數
+ncol  欄數
+byrow 輸入的資料是否要逐列輸入
+dimnames  矩陣的列嶼欄的名稱</code></pre>
+<pre class="r"><code>a=matrix(data=0.5,nrow=5,ncol=10)
+a</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+## [1,]  0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5   0.5
+## [2,]  0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5   0.5
+## [3,]  0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5   0.5
+## [4,]  0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5   0.5
+## [5,]  0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5   0.5</code></pre>
+<p>查看物件a之屬性</p>
+<pre class="r"><code>class(a)</code></pre>
+<pre><code>## [1] &quot;matrix&quot;</code></pre>
+<p>首先讓兩個向量物件a與b為1到7與7到1：</p>
+<pre class="r"><code>a=c(1,2,3,4,5,6,7)
+b=c(7,6,5,4,3,2,1)</code></pre>
+<p>讓c物件是一個包含a欄與b欄的資料格：</p>
+<pre><code>提示：
+data.frame是用於製造資料格的函數
+放入data.frame()中的每項物件則會成為個別的欄位，而再data.frame函數中的物件可以是向量、矩陣或是另一個data.frame資料
+
+其中常用的命令包含：
+row.names 欄位名稱
+check.rows  是否要確認資料長度是否一致
+check.names 是否確認欄為名稱為不影響運算的字元</code></pre>
+<pre class="r"><code>c=data.frame(a,b)
+c</code></pre>
+<pre><code>##   a b
+## 1 1 7
+## 2 2 6
+## 3 3 5
+## 4 4 4
+## 5 5 3
+## 6 6 2
+## 7 7 1</code></pre>
+<p>查看物件c的屬性</p>
+<pre class="r"><code>class(c)</code></pre>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<p>設定四個物件d、e、f、g與物件c相同</p>
+<pre class="r"><code>d=e=f=g=c</code></pre>
+<p>令物件h為一個清單，清單之中包含物件c、d、e、f、g</p>
+<pre><code>提示：
+list函數能將函數內的物件組成清單，一般來說函數內就填入物件即可。</code></pre>
+<pre class="r"><code>h=list(c,d,e,f,g)</code></pre>
+<p>查看物件h的屬性</p>
+<pre class="r"><code>class(h)</code></pre>
+<pre><code>## [1] &quot;list&quot;</code></pre>
+</div>
+<div class="section level2">
+<h2>查看物件</h2>
+<hr />
+<p>以下介紹各種查看物件的方法，如查看物件屬性class、欄位名稱names、colnames、列名稱row.names、資料頭幾列head、屬性與前幾項資料str、摘要summary等方法。</p>
+<p>查看a物件屬性：</p>
+<pre class="r"><code>class(a)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<p>查看c物件欄位名稱：</p>
+<pre><code>提示：
+names可以用來指定或查看物件的欄位名稱，通常會使用再data.frame與list上，但無法使用在matrix物件上。</code></pre>
+<pre class="r"><code>names(c)</code></pre>
+<pre><code>## [1] &quot;a&quot; &quot;b&quot;</code></pre>
+<p>查看c物件欄位名稱：</p>
+<pre><code>提示：
+colnames可以用來指定或查看物件的欄位名稱，可以做用在matrix與data.frame物件但無法適用於list。</code></pre>
+<pre class="r"><code>colnames(c)</code></pre>
+<pre><code>## [1] &quot;a&quot; &quot;b&quot;</code></pre>
+<p>查看c物件列名稱：</p>
+<pre><code>提示：
+row.names可以用來指定或查看物件的列名稱，可以做用在matrix與data.frame物件但無法適用於list。</code></pre>
+<pre class="r"><code>row.names(c)</code></pre>
+<pre><code>## [1] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; &quot;5&quot; &quot;6&quot; &quot;7&quot;</code></pre>
+<p>查看c物件資料頭5列：</p>
+<pre><code>提示：
+head在不特別指定情形下乃是呼叫物件資料的前五列
+
+常用命令
+n 指定要呈現的列數量</code></pre>
+<pre class="r"><code>head(c)</code></pre>
+<pre><code>##   a b
+## 1 1 7
+## 2 2 6
+## 3 3 5
+## 4 4 4
+## 5 5 3
+## 6 6 2</code></pre>
+<p>查看c物件頭2列：</p>
+<pre><code>提示：
+中括號[]可以做用於各種資料儲存類型，如vector、data.frame、list、matrix等，通常一為度的資料vector只需要用[數字]就可以呼叫該數字序列的值，但data.frame資料為二維，所以用[列數字,欄數字]其逗號左方代表列，右方代表欄位數字。如果要呼叫list中資料則要使用兩個中括號[[數字]]。</code></pre>
+<pre class="r"><code>c[1:2,]</code></pre>
+<pre><code>##   a b
+## 1 1 7
+## 2 2 6</code></pre>
+<p>查看物件c屬性與前幾項資料：</p>
+<pre class="r"><code>str(c)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    7 obs. of  2 variables:
+##  $ a: num  1 2 3 4 5 6 7
+##  $ b: num  7 6 5 4 3 2 1</code></pre>
+<p>查看物件c摘要：</p>
+<pre class="r"><code>summary(c)</code></pre>
+<pre><code>##        a             b      
+##  Min.   :1.0   Min.   :1.0  
+##  1st Qu.:2.5   1st Qu.:2.5  
+##  Median :4.0   Median :4.0  
+##  Mean   :4.0   Mean   :4.0  
+##  3rd Qu.:5.5   3rd Qu.:5.5  
+##  Max.   :7.0   Max.   :7.0</code></pre>
+<p>查看c資料第二欄位：</p>
+<pre class="r"><code>c[,2]</code></pre>
+<pre><code>## [1] 7 6 5 4 3 2 1</code></pre>
+<p>查看c資料第二欄位：</p>
+<pre><code>提示：l
+$字號代表某物件下的有記名資料，在data.frame中通常做為表示欄位名稱之用途也可以同時作用在list上。</code></pre>
+<pre class="r"><code>c$b</code></pre>
+<pre><code>## [1] 7 6 5 4 3 2 1</code></pre>
+</div>
+</div>
+
+		</div>
+		
+<div class="post__tags tags clearfix">
+	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="m4.73135 3.3795002q0-.5597-.39604-.9557-.39604-.3961-.95577-.3961-.55974 0-.95578.3961-.39604.396-.39604.9557 0 .5598.39604.9558.39604.3961.95578.3961.55973 0 .95577-.3961.39604-.396.39604-.9558zm11.26865 6.0832q0 .5596998-.39076.9504998l-5.18548 5.196q-.41188.3908-.9610504.3908-.55974 0-.9505-.3908l-7.5511496-7.5616998q-.40132-.3907-.68119-1.0666-.27987-.6759-.27987-1.2357v-4.3934q0-.54920004.40132-.95050004.40132-.4013.9505-.4013h4.39339q.55974 0 1.23565.2799.67591.2798 1.07723.6812l7.55115 7.54060004q.39076.4118.39076.961z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item"><a class="tags__link" href="/tags/r/" rel="tag">R</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/tutorial/" rel="tag">tutorial</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/%E7%89%A9%E4%BB%B6%E5%AE%9A%E7%BE%A9/" rel="tag">物件定義</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/%E9%81%8B%E7%AE%97/" rel="tag">運算</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/%E5%84%B2%E5%AD%98%E5%9E%8B%E6%85%8B/" rel="tag">儲存型態</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/%E8%B3%87%E6%96%99%E7%89%A9%E4%BB%B6/" rel="tag">資料物件</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/%E6%9F%A5%E7%9C%8B%E7%89%A9%E4%BB%B6/" rel="tag">查看物件</a></li>
+	</ul>
+</div>
+
+	</article>
+	
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="fish ko avatar" src="/img/inuyasha%20.JPG" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About fish ko</span>
+	</div>
+	<div class="authorbox__description">
+		try to work this out.......
+	</div>
+</div>
+	
+<nav class="post-nav row clearfix" itemscope="itemscope" itemtype="http://schema.org/SiteNavigationElement">
+	<div class="post-nav__item post-nav__item--prev col-1-2">
+		<a class="post-nav__link" href="/post/r-%E6%95%99%E5%AD%B8-ch00-%E5%BC%95%E8%A8%80/" rel="prev"><span class="post-nav__caption">«Previous</span><p class="post-nav__post-title">R 教學 - CH00 引言</p></a>
+	</div>
+	<div class="post-nav__item post-nav__item--next col-1-2">
+		<a class="post-nav__link" href="/post/r-%E6%95%99%E5%AD%B8-ch02-%E5%AD%98%E5%8F%96%E8%B3%87%E6%96%99/" rel="next"><span class="post-nav__caption">Next»</span><p class="post-nav__post-title">R 教學 - CH02 存取資料</p></a>
+	</div>
+</nav>
+
+	
+<div class="comments">
+	<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "seimwiwa" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+<aside class="sidebar" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">
+	
+<div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="//google.com/search">
+		<label>
+			<span class="screen-reader-text">Search for:</span>
+			<input class="widget-search__field" type="search" placeholder="SEARCH..." value="" name="q">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+	
+<div class="widget-recent widget">
+	<h4 class="widget__title">Recent Posts</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/post/2018-01-07-health.risk.mental.issue.weather/">健康風險-天氣與精神異常</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch04-%E8%B3%87%E6%96%99%E8%99%95%E7%90%86/">R 教學 - CH04 資料處理</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch03-%E8%BF%B4%E5%9C%88/">R 教學 - CH03 迴圈</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch02-%E5%AD%98%E5%8F%96%E8%B3%87%E6%96%99/">R 教學 - CH02 存取資料</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch01-%E5%9F%BA%E6%9C%AC%E8%AA%9E%E6%B3%95/">R 教學 - CH01 基本語法</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch00-%E5%BC%95%E8%A8%80/">R 教學 - CH00 引言</a></li>
+		</ul>
+	</div>
+</div>
+
+	
+<div class="widget-categories widget">
+	<h4 class="widget__title">Categories</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/categories/r-tutorial">R-Tutorial</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/reserch">Reserch</a></li>
+		</ul>
+	</div>
+</div>
+	
+
+	
+<div class="widget-taglist widget">
+	<h4 class="widget__title">Tags</h4>
+	<div class="widget__content">
+		<a class="widget__link widget__link--taglist" href="/tags/apply" title="apply">apply</a>
+		<a class="widget__link widget__link--taglist" href="/tags/data.table" title="data.table">data.table</a>
+		<a class="widget__link widget__link--taglist" href="/tags/dlnm" title="dlnm">dlnm</a>
+		<a class="widget__link widget__link--taglist" href="/tags/dplyr" title="dplyr">dplyr</a>
+		<a class="widget__link widget__link--taglist" href="/tags/for" title="for">for</a>
+		<a class="widget__link widget__link--taglist" href="/tags/health-risk-assessment" title="health-risk-assessment">health-risk-assessment</a>
+		<a class="widget__link widget__link--taglist" href="/tags/introduction" title="introduction">introduction</a>
+		<a class="widget__link widget__link--taglist" href="/tags/load" title="load">load</a>
+		<a class="widget__link widget__link--taglist" href="/tags/mental-issue" title="mental-issue">mental-issue</a>
+		<a class="widget__link widget__link--taglist" href="/tags/r" title="r">r</a>
+		<a class="widget__link widget__link--taglist" href="/tags/read" title="read">read</a>
+		<a class="widget__link widget__link--taglist" href="/tags/reshape" title="reshape">reshape</a>
+		<a class="widget__link widget__link--taglist" href="/tags/reshape2" title="reshape2">reshape2</a>
+		<a class="widget__link widget__link--taglist" href="/tags/save" title="save">save</a>
+		<a class="widget__link widget__link--taglist" href="/tags/tutorial" title="tutorial">tutorial</a>
+		<a class="widget__link widget__link--taglist" href="/tags/weather-effect" title="weather-effect">weather-effect</a>
+		<a class="widget__link widget__link--taglist" href="/tags/write" title="write">write</a>
+		<a class="widget__link widget__link--taglist" href="/tags/xls" title="xls">xls</a>
+		<a class="widget__link widget__link--taglist" href="/tags/xlsx" title="xlsx">xlsx</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%81%a5%e5%ba%b7%e9%a2%a8%e9%9a%aa%e8%a9%95%e4%bc%b0" title="健康風險評估">健康風險評估</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%84%b2%e5%ad%98%e5%9e%8b%e6%85%8b" title="儲存型態">儲存型態</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%a4%a9%e6%b0%a3" title="天氣">天氣</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%ad%98%e5%8f%96%e8%b3%87%e6%96%99" title="存取資料">存取資料</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e6%9f%a5%e7%9c%8b%e7%89%a9%e4%bb%b6" title="查看物件">查看物件</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e7%89%a9%e4%bb%b6%e5%ae%9a%e7%be%a9" title="物件定義">物件定義</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e7%b2%be%e7%a5%9e%e7%95%b0%e5%b8%b8" title="精神異常">精神異常</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e8%b3%87%e6%96%99%e7%89%a9%e4%bb%b6" title="資料物件">資料物件</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e8%bf%b4%e5%9c%88" title="迴圈">迴圈</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e9%81%8b%e7%ae%97" title="運算">運算</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e9%9d%9e%e7%b7%9a%e6%80%a7%e9%81%9e%e5%bb%b6%e6%a8%a1%e5%9e%8b" title="非線性遞延模型">非線性遞延模型</a>
+	</div>
+</div>
+</aside>
+
+	</div>
+		<footer class="footer" itemscope="itemscope" itemtype="http://schema.org/WPFooter">
+			<div class="container container-inner">
+				<p class="footer__copyright">&copy; 2018 魚缸. <span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad theme</a>.</span></p>
+			</div>
+		</footer>
+	</div>
+
+<script>
+	var navigation = responsiveNav(".menu", {
+		navClass: "menu--collapse",
+	});
+</script>
+</body>
+</html>

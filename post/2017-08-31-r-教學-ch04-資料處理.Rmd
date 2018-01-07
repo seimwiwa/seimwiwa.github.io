@@ -1,0 +1,467 @@
+---
+title: R 教學 - CH04 資料處理
+author: seimwiwa
+date: '2017-08-31'
+slug: r-教學-ch04-資料處理
+categories:
+  - R tutorial
+tags:
+  - R
+  - tutorial
+  - reshape
+  - reshape2
+  - dplyr
+  - data.table
+---
+
+
+#資料處理
+
+***
+
+在此總共會介紹數個不同的方法來完成資料處理。
+其中包含原本內建的函數與四個套件：reshape、reshape2、dplyr、data.table中的函數。
+個別的工作是：
+
+reshape：用兩個簡單的函數：melt與cast來靈活的改變資料結構。
+
+reshape2：用兩個簡單的函數：melt與dcast來靈活的改變資料結構。
+
+dplyr：快速有秩並節省記憶體空間的處理資料結構。
+
+而reshape與reshape2的差異很小，只在reshape中的cast只能用來處理數字，reshape2的dcast可以處理數字及文字。
+
+以下分成：資料合併、欄轉列、列轉欄、轉置文字資料、資料排列、資料篩選、欄位計算、資料整併來介紹
+
+##資料合併
+
+***
+
+設有兩筆資料如下dat.a與dat.b。
+dat.a紀載類別與數值，dat.b紀載不同類別的日期。
+
+```{r}
+dat.a=data.frame(class=c("A","B","A","A","B","C"),values=c(sample(x=1:10,size=6)))
+dat.a
+dat.b=data.frame(class=c("A","B","D"),date=c("2000-01-05","2015-01-05","2015-02-05"))
+dat.b
+```
+
+最終希望資料可以合成如下，即是依照class分類來合併兩筆資料，在新資料中能顯示不同類別的日期。
+
+```{r,echo=F}
+dat.merge=merge(dat.a,dat.b,by="class")
+dat.merge
+```
+
+因此我們需要用到merge這個函數
+
+~~~~~
+提示：
+merge可以合併函數中的資料依據給定的欄位。
+
+其中常用的命令包含：
+x  第一筆要合併的資料
+y  第二筆要合併的資料
+by  如果在xy資料中合併所依據的欄位名稱相同則使用by，by不只可以指定某一參照的欄位，也可以有多個要依據的欄位，通常以by=c("欄位1","欄位2")表示
+by.x  如果xy資料中合併所依據的欄位名稱不相同，在x資料中合併所依據的欄位名稱或欄位號碼使用by.x
+by.y 如上
+all 當設置all=TRUE，表示仍要保留合併的過程中無法找到對應的數值的資料
+all.x 當設置all.x=TRUE，表示仍要保留僅在all.x中無法找到對應的數值的資料
+all.y 如上
+~~~~~
+
+```{r}
+dat.merge=merge(dat.a,dat.b,by="class")
+dat.merge
+```
+
+或者可以這樣表達：
+```{r}
+dat.merge=merge(dat.a,dat.b,by.x="class",by.y="class")
+
+dat.merge
+```
+
+在合併的時候by不一定要以欄位名稱填入，也可以填入欄位的編號：
+
+```{r}
+dat.merge=merge(dat.a,dat.b,by.x=1,by.y=1)
+
+dat.merge
+```
+
+在dat.a資料中可以發現類別欄位class有一個名為C的資料，是在dat.b找不到的
+同時dat.b中的類別欄位class也有一個名為D的資料，在dat.a找不到
+
+如果最後要呈現的資料不需要保留這兩個數值，即是這樣表達：
+
+```{r}
+dat.merge=merge(dat.a,dat.b,by="class",all=F)
+dat.merge
+```
+
+如果最後要呈現的資料要保留兩個資料及中不匹配的數據：
+
+```{r}
+dat.merge=merge(dat.a,dat.b,by="class",all=T)
+dat.merge
+```
+
+僅保留dat.a中的所有資料：
+
+```{r}
+dat.merge=merge(dat.a,dat.b,by="class",all.x=T)
+dat.merge
+```
+
+僅保留dat.b中的所有資料：
+
+```{r}
+dat.merge=merge(dat.a,dat.b,by="class",all.y=T)
+dat.merge
+```
+
+##欄轉列
+
+***
+
+有一筆新資料dat.c如下：
+
+```{r}
+dat.c=data.frame(class=c("A","B","A","A","B","B"),
+                 date=c("2000-01-05","2015-01-05","2000-01-05","2000-01-05","2015-01-05","2015-01-05"),
+                 value1=c(sample(x=1:10,size=6)),
+                 value2=c(sample(x=11:20,size=6)),
+                 value3=c(sample(x=21:30,size=6)))
+dat.c
+```
+
+最終想要轉置value1、value2、value3為同一個欄位如下：
+
+```{r include=FALSE,echo=F}
+library(reshape)
+melt(dat.c,id=c("class","date"))
+```
+
+則使用melt，其為reshape或rehspae2套件中的函數，因此必須先安裝並載入這兩個套件的其中之一。
+
+僅第一次需要執行此步驟進行安裝。
+
+```{r include=FALSE,eval=FALSE}
+install.packages("reshape")
+```
+
+而後呼叫套件
+```{r include=FALSE,eval=FALSE}
+library("reshape")
+```
+~~~~~
+提示：
+melt固定指定的欄位將其他轉置。
+
+其中常用的命令包含：
+data  將要轉置的資料
+id  要固定的欄位
+variable_name 轉置後的欄位名稱，不設定則為variable
+value.name  轉置後的數值名稱，不設定則為value
+na.rm 是否移除NA資料，不設定則是不移除na.rm = FALSE
+~~~~~
+```{r}
+dat.d=melt(dat.c,id=c("class","date"))
+
+```
+
+##列轉欄
+
+***
+如果要將dat.d資料轉置如下
+
+```{r include=FALSE,echo=F}
+library(reshape)
+cast(dat.d,class+variable~date,value="value","mean")
+```
+
+則需要使用cast指令
+
+~~~~~
+提示：
+cast依據給定的公式將一個欄位的數值轉置成為多個數值欄位。
+
+其中常用的命令包含：
+data  將要轉置的資料
+formula  使用~來指定要轉置與固定的欄位，在其左側代表要固定的欄位，右側代表要轉置的欄位
+value 要轉置的數值欄位
+fun.aggregate 轉置後的數值依據何種方式呈現，不只定則使用fun.aggregate="length"，代表該項目出現的次數，min為取最小值，max表示最大值，mean則是平均數
+
+~~~~~
+
+```{r include=FALSE,echo=F}
+library(reshape)
+cast(data=dat.d,formula=class+variable~date,value="value",fun.aggregate="mean")
+```
+
+##轉置文字資料
+
+***
+
+假設有一筆資料如下
+
+```{r}
+dat.e=data.frame(class=c("C1","C2","C1","C2"),
+                 variable=c("V1","V1","V2","V2"),
+                 value=c("E","F","G","H"))
+dat.e
+```
+
+將要將其轉換為下列
+
+```{r include=FALSE,echo=F}
+library(reshape2)
+dcast(dat.e,class~variable)
+```
+
+則應使用reshape2套件中的dcast，cast與dcast之差別是dcast能夠處理文字資料，其餘皆與cast相同且轉換文字資料時不需要使用fun.aggregate。
+
+僅第一次需要執行此步驟進行安裝。
+
+```{r include=FALSE,eval=FALSE}
+install.packages("reshape2")
+```
+
+呼叫套件
+
+```{r include=FALSE,eval=FALSE}
+library("reshape2")
+```
+
+```{r}
+dcast(dat.e,class~variable)
+```
+
+##資料排列
+
+***
+當需要將資料dat.d中的value欄位依據大小排列
+
+```{r, echo=F}
+dat.d[order(dat.d$value),]
+```
+
+可以使用order函數
+
+~~~~~
+提示：
+order依據資料大小給定排名，因此回傳的是數值在資料中的順序。
+
+其中常用的命令包含：
+x  要排列大小的資料
+decreasing  預設為decreasing = FALSE，表示大排到小
+
+~~~~~
+
+首先將資料放入order中，執行排序
+
+```{r}
+order(x=dat.d$value)
+```
+
+order輸出的結果是每一個數值在dat.d$value中的名次
+如果要求dat.d按照order後的名次排序即完成
+
+```{r}
+dat.d[order(x=dat.d$value),]
+```
+
+##資料篩選
+
+***
+
+在資料dat.d當中如果要選擇variable欄位中是value3的資料時可以以下列方式進行處理
+
+```{r}
+dat.d[dat.d$variable=="value3",]
+```
+此表示在dat.d資料中，如果dat.d$variable符合value3則將其選出
+
+當要指定資料必須同時在variable中為value3，在value必須大於25，則如下
+
+```{r}
+dat.d[dat.d$variable=="value3"&dat.d$value>25,]
+```
+
+同樣的，也能夠透過函數subset來達到這樣的效果
+
+~~~~~
+提示：
+subset依據要求篩選資料。
+
+其中常用的命令包含：
+x  要篩選資料
+subset  預設為decreasing = FALSE，表示大排到小
+
+~~~~~
+
+```{r}
+subset(x=dat.d,subset=variable=="value3")
+```
+
+```{r}
+subset(x=dat.d,subset=variable=="value3"&value>25)
+```
+
+
+##欄位計算
+
+***
+
+dat.c中，如果要將value1、value2、value3兩兩相乘與三者相乘為下列資料
+
+```{r include=FALSE,echo=FALSE}
+library(dplyr)
+dat.c%>%mutate(value12=value1*value2,
+               value13=value1*value3,
+               value23=value2*value3,
+               value123=value1*value2*value3
+               )
+```
+
+一般使用者會如此操作
+
+```{r}
+dat.cc=dat.c
+dat.cc$value12=dat.cc$value1*dat.cc$value2
+dat.cc$value13=dat.cc$value1*dat.cc$value3
+dat.cc$value23=dat.cc$value2*dat.cc$value3
+dat.cc$value123=dat.cc$value1*dat.cc$value2*dat.cc$value3
+dat.cc
+```
+
+這樣會使得程式碼貴於繁雜，因此會利用with函數來減少程式碼
+
+~~~~~
+提示：
+with表示在指定資料中進行操作。
+
+其中常用的命令包含：
+data  要操作的資料
+expr  操作內容
+
+~~~~~
+
+程式碼則可以更改為下列
+
+```{r}
+dat.cc=dat.c
+
+dat.cc$value12=with(dat.cc,value1*value2)
+dat.cc$value13=with(dat.cc,value1*value3)
+dat.cc$value23=with(dat.cc,value2*value3)
+dat.cc$value123=with(dat.cc,value1*value2*value3)
+dat.cc
+```
+
+然而這樣程式碼還是十分繁多，因此可以使用dplyr套件中的%>%與mutate進行計算，%>%表示在執行%>%左側的動作後，接續進行%>%右側的程式碼
+
+僅第一次需要執行此步驟進行安裝。
+
+```{r include=FALSE,eval=FALSE}
+install.packages("dplyr")
+```
+
+呼叫套件
+
+```{r include=FALSE,eval=FALSE}
+library("dplyr")
+```
+
+~~~~~
+提示：
+mutate中放置要計算的欄位與公式。
+
+~~~~~
+
+則可以將dat.cc如下表示
+
+```{r}
+library(dplyr)
+dat.cc=dat.c%>%mutate(value12=value1*value2,
+               value13=value1*value3,
+               value23=value2*value3,
+               value123=value1*value2*value3)
+dat.cc
+```
+
+##資料整併
+
+***
+在前面已經將dat.c轉置為dat.d，dat.d的value欄位中有value1、value2、value3，三種變數。要進行資料統整、整併時；例如要計算value1、value2、value3的最小值、最大值、平均值，使用dplyr中%>%、group_by、summarise函數能快速地進行統整與計算，如下。
+
+```{r include=FALSE,echo=FALSE}
+library(dplyr)
+dat.d%>%group_by(variable)%>%summarise(Min=min(value),
+                                       Max=max(value),
+                                       Mean=mean(value))
+```
+
+~~~~~
+提示：
+group_by表示要依據那些欄位名稱進行群組，
+
+~~~~~
+
+~~~~~
+提示：
+summarise中放置要統整計算的欄位與公式。
+
+~~~~~
+
+~~~~~
+提示：
+min 取出給定資料的最小值。
+
+其中常用的命令包含：
+x  要計算的資料
+na.rm  是否移除na數值，預設為na.rm = FALSE
+
+~~~~~
+
+~~~~~
+提示：
+max 取出給定資料的最大值。
+
+其中常用的命令包含：
+x  要計算的資料
+na.rm  是否移除na數值，預設為na.rm = FALSE
+
+~~~~~
+
+~~~~~
+提示：
+mean 取出給定資料的平均值。
+
+其中常用的命令包含：
+x  要計算的資料
+na.rm  是否移除na數值，預設為na.rm = FALSE
+
+~~~~~
+
+由此，可以利用下列方式得到新資料dat.dd
+
+```{r}
+library(dplyr)
+data.dd=dat.d%>%group_by(variable)%>%summarise(Min=min(value),
+                                               Max=max(value),
+                                               Mean=mean(value))
+data.dd
+```
+
+如果要同時依date與variable進行群組計算則在group_by中添加date即可
+
+```{r}
+library(dplyr)
+data.dd=dat.d%>%group_by(date,variable)%>%summarise(Min=min(value),
+                                                    Max=max(value),
+                                                    Mean=mean(value))
+data.dd
+```

@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R 教學 - CH04 資料處理</title>
+<meta name="description" content="try to work this out.......">
+<meta name="generator" content="Hugo 0.32.2" />
+<meta property="og:title" content="R 教學 - CH04 資料處理" />
+<meta property="og:description" content="資料處理 在此總共會介紹數個不同的方法來完成資料處理。 其中包含原本內建的函數與四個套件：reshape、reshape2、dplyr、data.table中的函數。 個別的工作是：
+reshape：用兩個簡單的函數：melt與cast來靈活的改變資料結構。
+reshape2：用兩個簡單的函數：melt與dcast來靈活的改變資料結構。
+dplyr：快速有秩並節省記憶體空間的處理資料結構。
+而reshape與reshape2的差異很小，只在reshape中的cast只能用來處理數字，reshape2的dcast可以處理數字及文字。
+以下分成：資料合併、欄轉列、列轉欄、轉置文字資料、資料排列、資料篩選、欄位計算、資料整併來介紹
+資料合併 設有兩筆資料如下dat.a與dat.b。 dat.a紀載類別與數值，dat.b紀載不同類別的日期。
+dat.a=data.frame(class=c(&quot;A&quot;,&quot;B&quot;,&quot;A&quot;,&quot;A&quot;,&quot;B&quot;,&quot;C&quot;),values=c(sample(x=1:10,size=6))) dat.a ## class values ## 1 A 6 ## 2 B 3 ## 3 A 4 ## 4 A 7 ## 5 B 1 ## 6 C 9 dat.b=data.frame(class=c(&quot;A&quot;,&quot;B&quot;,&quot;D&quot;),date=c(&quot;2000-01-05&quot;,&quot;2015-01-05&quot;,&quot;2015-02-05&quot;)) dat.b ## class date ## 1 A 2000-01-05 ## 2 B 2015-01-05 ## 3 D 2015-02-05 最終希望資料可以合成如下，即是依照class分類來合併兩筆資料，在新資料中能顯示不同類別的日期。
+## class values date ## 1 A 6 2000-01-05 ## 2 A 4 2000-01-05 ## 3 A 7 2000-01-05 ## 4 B 3 2015-01-05 ## 5 B 1 2015-01-05 因此我們需要用到merge這個函數" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/post/r-%E6%95%99%E5%AD%B8-ch04-%E8%B3%87%E6%96%99%E8%99%95%E7%90%86/" />
+
+
+
+<meta property="article:published_time" content="2017-08-31T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2017-08-31T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+<link rel="dns-prefetch" href="//fonts.gstatic.com" />
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700" type="text/css" media="all" />
+<link rel="stylesheet" href="/css/style.css" type="text/css" media="all" />
+<script type="text/javascript" src="/js/scripts.js"></script>
+<link rel="shortcut icon" href="/favicon.ico">
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-112058330-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body class="body body-right-sidebar mobile" itemscope="itemscope" itemtype="http://schema.org/WebPage">
+	<div class="container container-outer">
+		<header class="header" itemscope="itemscope" itemtype="http://schema.org/WPHeader">
+			<div class="container container-inner clearfix">
+				<div class="logo" role="banner" itemscope="itemscope" itemtype="http://schema.org/Brand">
+					<a class="logo__link" href="/" title="魚缸" rel="home">
+						<h1 class="logo__title">魚缸</h1>
+						<h2 class="logo__tagline">fish site</h2>
+					</a>
+				</div>
+			</div>
+			
+<nav class="menu" itemscope="itemscope" itemtype="http://schema.org/SiteNavigationElement">
+	<ul class="menu__list">
+		<li class="menu__item"><a class="menu__link" href="/about/">ABOUT HUGO</a></li>
+	</ul>
+</nav>
+
+		</header>
+		<div class="wrapper clearfix">
+
+<main class="main-content content" role="main" itemprop="mainContentOfPage">
+	<article class="post">
+		<header class="post__header clearfix">
+			<h1 class="post__title">R 教學 - CH04 資料處理</h1>
+			<p class="post__meta meta">
+				<svg class="icon icon-time" height="14" viewBox="0 0 16 16" width="14" xmlns="http://www.w3.org/2000/svg"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+				<time class="post__meta-date" datetime="2017-08-31T00:00:00">August 31, 2017</time>
+				<span class="post__meta-categories meta-categories">
+					<svg class="icon icon-category" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+					<a class="meta-categories__link" href="/categories/r-tutorial" rel="category">R tutorial</a></span>
+			</p>
+		</header>
+		<div class="post__content clearfix">
+			<div class="section level1">
+<h1>資料處理</h1>
+<hr />
+<p>在此總共會介紹數個不同的方法來完成資料處理。 其中包含原本內建的函數與四個套件：reshape、reshape2、dplyr、data.table中的函數。 個別的工作是：</p>
+<p>reshape：用兩個簡單的函數：melt與cast來靈活的改變資料結構。</p>
+<p>reshape2：用兩個簡單的函數：melt與dcast來靈活的改變資料結構。</p>
+<p>dplyr：快速有秩並節省記憶體空間的處理資料結構。</p>
+<p>而reshape與reshape2的差異很小，只在reshape中的cast只能用來處理數字，reshape2的dcast可以處理數字及文字。</p>
+<p>以下分成：資料合併、欄轉列、列轉欄、轉置文字資料、資料排列、資料篩選、欄位計算、資料整併來介紹</p>
+<div class="section level2">
+<h2>資料合併</h2>
+<hr />
+<p>設有兩筆資料如下dat.a與dat.b。 dat.a紀載類別與數值，dat.b紀載不同類別的日期。</p>
+<pre class="r"><code>dat.a=data.frame(class=c(&quot;A&quot;,&quot;B&quot;,&quot;A&quot;,&quot;A&quot;,&quot;B&quot;,&quot;C&quot;),values=c(sample(x=1:10,size=6)))
+dat.a</code></pre>
+<pre><code>##   class values
+## 1     A      6
+## 2     B      3
+## 3     A      4
+## 4     A      7
+## 5     B      1
+## 6     C      9</code></pre>
+<pre class="r"><code>dat.b=data.frame(class=c(&quot;A&quot;,&quot;B&quot;,&quot;D&quot;),date=c(&quot;2000-01-05&quot;,&quot;2015-01-05&quot;,&quot;2015-02-05&quot;))
+dat.b</code></pre>
+<pre><code>##   class       date
+## 1     A 2000-01-05
+## 2     B 2015-01-05
+## 3     D 2015-02-05</code></pre>
+<p>最終希望資料可以合成如下，即是依照class分類來合併兩筆資料，在新資料中能顯示不同類別的日期。</p>
+<pre><code>##   class values       date
+## 1     A      6 2000-01-05
+## 2     A      4 2000-01-05
+## 3     A      7 2000-01-05
+## 4     B      3 2015-01-05
+## 5     B      1 2015-01-05</code></pre>
+<p>因此我們需要用到merge這個函數</p>
+<pre><code>提示：
+merge可以合併函數中的資料依據給定的欄位。
+
+其中常用的命令包含：
+x  第一筆要合併的資料
+y  第二筆要合併的資料
+by  如果在xy資料中合併所依據的欄位名稱相同則使用by，by不只可以指定某一參照的欄位，也可以有多個要依據的欄位，通常以by=c(&quot;欄位1&quot;,&quot;欄位2&quot;)表示
+by.x  如果xy資料中合併所依據的欄位名稱不相同，在x資料中合併所依據的欄位名稱或欄位號碼使用by.x
+by.y 如上
+all 當設置all=TRUE，表示仍要保留合併的過程中無法找到對應的數值的資料
+all.x 當設置all.x=TRUE，表示仍要保留僅在all.x中無法找到對應的數值的資料
+all.y 如上</code></pre>
+<pre class="r"><code>dat.merge=merge(dat.a,dat.b,by=&quot;class&quot;)
+dat.merge</code></pre>
+<pre><code>##   class values       date
+## 1     A      6 2000-01-05
+## 2     A      4 2000-01-05
+## 3     A      7 2000-01-05
+## 4     B      3 2015-01-05
+## 5     B      1 2015-01-05</code></pre>
+<p>或者可以這樣表達：</p>
+<pre class="r"><code>dat.merge=merge(dat.a,dat.b,by.x=&quot;class&quot;,by.y=&quot;class&quot;)
+
+dat.merge</code></pre>
+<pre><code>##   class values       date
+## 1     A      6 2000-01-05
+## 2     A      4 2000-01-05
+## 3     A      7 2000-01-05
+## 4     B      3 2015-01-05
+## 5     B      1 2015-01-05</code></pre>
+<p>在合併的時候by不一定要以欄位名稱填入，也可以填入欄位的編號：</p>
+<pre class="r"><code>dat.merge=merge(dat.a,dat.b,by.x=1,by.y=1)
+
+dat.merge</code></pre>
+<pre><code>##   class values       date
+## 1     A      6 2000-01-05
+## 2     A      4 2000-01-05
+## 3     A      7 2000-01-05
+## 4     B      3 2015-01-05
+## 5     B      1 2015-01-05</code></pre>
+<p>在dat.a資料中可以發現類別欄位class有一個名為C的資料，是在dat.b找不到的 同時dat.b中的類別欄位class也有一個名為D的資料，在dat.a找不到</p>
+<p>如果最後要呈現的資料不需要保留這兩個數值，即是這樣表達：</p>
+<pre class="r"><code>dat.merge=merge(dat.a,dat.b,by=&quot;class&quot;,all=F)
+dat.merge</code></pre>
+<pre><code>##   class values       date
+## 1     A      6 2000-01-05
+## 2     A      4 2000-01-05
+## 3     A      7 2000-01-05
+## 4     B      3 2015-01-05
+## 5     B      1 2015-01-05</code></pre>
+<p>如果最後要呈現的資料要保留兩個資料及中不匹配的數據：</p>
+<pre class="r"><code>dat.merge=merge(dat.a,dat.b,by=&quot;class&quot;,all=T)
+dat.merge</code></pre>
+<pre><code>##   class values       date
+## 1     A      6 2000-01-05
+## 2     A      4 2000-01-05
+## 3     A      7 2000-01-05
+## 4     B      3 2015-01-05
+## 5     B      1 2015-01-05
+## 6     C      9       &lt;NA&gt;
+## 7     D     NA 2015-02-05</code></pre>
+<p>僅保留dat.a中的所有資料：</p>
+<pre class="r"><code>dat.merge=merge(dat.a,dat.b,by=&quot;class&quot;,all.x=T)
+dat.merge</code></pre>
+<pre><code>##   class values       date
+## 1     A      6 2000-01-05
+## 2     A      4 2000-01-05
+## 3     A      7 2000-01-05
+## 4     B      3 2015-01-05
+## 5     B      1 2015-01-05
+## 6     C      9       &lt;NA&gt;</code></pre>
+<p>僅保留dat.b中的所有資料：</p>
+<pre class="r"><code>dat.merge=merge(dat.a,dat.b,by=&quot;class&quot;,all.y=T)
+dat.merge</code></pre>
+<pre><code>##   class values       date
+## 1     A      6 2000-01-05
+## 2     A      4 2000-01-05
+## 3     A      7 2000-01-05
+## 4     B      3 2015-01-05
+## 5     B      1 2015-01-05
+## 6     D     NA 2015-02-05</code></pre>
+</div>
+<div class="section level2">
+<h2>欄轉列</h2>
+<hr />
+<p>有一筆新資料dat.c如下：</p>
+<pre class="r"><code>dat.c=data.frame(class=c(&quot;A&quot;,&quot;B&quot;,&quot;A&quot;,&quot;A&quot;,&quot;B&quot;,&quot;B&quot;),
+                 date=c(&quot;2000-01-05&quot;,&quot;2015-01-05&quot;,&quot;2000-01-05&quot;,&quot;2000-01-05&quot;,&quot;2015-01-05&quot;,&quot;2015-01-05&quot;),
+                 value1=c(sample(x=1:10,size=6)),
+                 value2=c(sample(x=11:20,size=6)),
+                 value3=c(sample(x=21:30,size=6)))
+dat.c</code></pre>
+<pre><code>##   class       date value1 value2 value3
+## 1     A 2000-01-05      2     11     21
+## 2     B 2015-01-05      1     13     25
+## 3     A 2000-01-05      3     15     23
+## 4     A 2000-01-05      5     17     30
+## 5     B 2015-01-05      4     14     27
+## 6     B 2015-01-05      6     12     28</code></pre>
+<p>最終想要轉置value1、value2、value3為同一個欄位如下：</p>
+<p>則使用melt，其為reshape或rehspae2套件中的函數，因此必須先安裝並載入這兩個套件的其中之一。</p>
+<p>僅第一次需要執行此步驟進行安裝。</p>
+<p>而後呼叫套件</p>
+<pre><code>提示：
+melt固定指定的欄位將其他轉置。
+
+其中常用的命令包含：
+data  將要轉置的資料
+id  要固定的欄位
+variable_name 轉置後的欄位名稱，不設定則為variable
+value.name  轉置後的數值名稱，不設定則為value
+na.rm 是否移除NA資料，不設定則是不移除na.rm = FALSE</code></pre>
+<pre class="r"><code>dat.d=melt(dat.c,id=c(&quot;class&quot;,&quot;date&quot;))</code></pre>
+</div>
+<div class="section level2">
+<h2>列轉欄</h2>
+<hr />
+<p>如果要將dat.d資料轉置如下</p>
+<p>則需要使用cast指令</p>
+<pre><code>提示：
+cast依據給定的公式將一個欄位的數值轉置成為多個數值欄位。
+
+其中常用的命令包含：
+data  將要轉置的資料
+formula  使用~來指定要轉置與固定的欄位，在其左側代表要固定的欄位，右側代表要轉置的欄位
+value 要轉置的數值欄位
+fun.aggregate 轉置後的數值依據何種方式呈現，不只定則使用fun.aggregate=&quot;length&quot;，代表該項目出現的次數，min為取最小值，max表示最大值，mean則是平均數
+</code></pre>
+</div>
+<div class="section level2">
+<h2>轉置文字資料</h2>
+<hr />
+<p>假設有一筆資料如下</p>
+<pre class="r"><code>dat.e=data.frame(class=c(&quot;C1&quot;,&quot;C2&quot;,&quot;C1&quot;,&quot;C2&quot;),
+                 variable=c(&quot;V1&quot;,&quot;V1&quot;,&quot;V2&quot;,&quot;V2&quot;),
+                 value=c(&quot;E&quot;,&quot;F&quot;,&quot;G&quot;,&quot;H&quot;))
+dat.e</code></pre>
+<pre><code>##   class variable value
+## 1    C1       V1     E
+## 2    C2       V1     F
+## 3    C1       V2     G
+## 4    C2       V2     H</code></pre>
+<p>將要將其轉換為下列</p>
+<p>則應使用reshape2套件中的dcast，cast與dcast之差別是dcast能夠處理文字資料，其餘皆與cast相同且轉換文字資料時不需要使用fun.aggregate。</p>
+<p>僅第一次需要執行此步驟進行安裝。</p>
+<p>呼叫套件</p>
+<pre class="r"><code>dcast(dat.e,class~variable)</code></pre>
+<pre><code>##   class V1 V2
+## 1    C1  E  G
+## 2    C2  F  H</code></pre>
+</div>
+<div class="section level2">
+<h2>資料排列</h2>
+<hr />
+<p>當需要將資料dat.d中的value欄位依據大小排列</p>
+<pre><code>##    class       date variable value
+## 2      B 2015-01-05   value1     1
+## 1      A 2000-01-05   value1     2
+## 3      A 2000-01-05   value1     3
+## 5      B 2015-01-05   value1     4
+## 4      A 2000-01-05   value1     5
+## 6      B 2015-01-05   value1     6
+## 7      A 2000-01-05   value2    11
+## 12     B 2015-01-05   value2    12
+## 8      B 2015-01-05   value2    13
+## 11     B 2015-01-05   value2    14
+## 9      A 2000-01-05   value2    15
+## 10     A 2000-01-05   value2    17
+## 13     A 2000-01-05   value3    21
+## 15     A 2000-01-05   value3    23
+## 14     B 2015-01-05   value3    25
+## 17     B 2015-01-05   value3    27
+## 18     B 2015-01-05   value3    28
+## 16     A 2000-01-05   value3    30</code></pre>
+<p>可以使用order函數</p>
+<pre><code>提示：
+order依據資料大小給定排名，因此回傳的是數值在資料中的順序。
+
+其中常用的命令包含：
+x  要排列大小的資料
+decreasing  預設為decreasing = FALSE，表示大排到小
+</code></pre>
+<p>首先將資料放入order中，執行排序</p>
+<pre class="r"><code>order(x=dat.d$value)</code></pre>
+<pre><code>##  [1]  2  1  3  5  4  6  7 12  8 11  9 10 13 15 14 17 18 16</code></pre>
+<p>order輸出的結果是每一個數值在dat.d$value中的名次 如果要求dat.d按照order後的名次排序即完成</p>
+<pre class="r"><code>dat.d[order(x=dat.d$value),]</code></pre>
+<pre><code>##    class       date variable value
+## 2      B 2015-01-05   value1     1
+## 1      A 2000-01-05   value1     2
+## 3      A 2000-01-05   value1     3
+## 5      B 2015-01-05   value1     4
+## 4      A 2000-01-05   value1     5
+## 6      B 2015-01-05   value1     6
+## 7      A 2000-01-05   value2    11
+## 12     B 2015-01-05   value2    12
+## 8      B 2015-01-05   value2    13
+## 11     B 2015-01-05   value2    14
+## 9      A 2000-01-05   value2    15
+## 10     A 2000-01-05   value2    17
+## 13     A 2000-01-05   value3    21
+## 15     A 2000-01-05   value3    23
+## 14     B 2015-01-05   value3    25
+## 17     B 2015-01-05   value3    27
+## 18     B 2015-01-05   value3    28
+## 16     A 2000-01-05   value3    30</code></pre>
+</div>
+<div class="section level2">
+<h2>資料篩選</h2>
+<hr />
+<p>在資料dat.d當中如果要選擇variable欄位中是value3的資料時可以以下列方式進行處理</p>
+<pre class="r"><code>dat.d[dat.d$variable==&quot;value3&quot;,]</code></pre>
+<pre><code>##    class       date variable value
+## 13     A 2000-01-05   value3    21
+## 14     B 2015-01-05   value3    25
+## 15     A 2000-01-05   value3    23
+## 16     A 2000-01-05   value3    30
+## 17     B 2015-01-05   value3    27
+## 18     B 2015-01-05   value3    28</code></pre>
+<p>此表示在dat.d資料中，如果dat.d$variable符合value3則將其選出</p>
+<p>當要指定資料必須同時在variable中為value3，在value必須大於25，則如下</p>
+<pre class="r"><code>dat.d[dat.d$variable==&quot;value3&quot;&amp;dat.d$value&gt;25,]</code></pre>
+<pre><code>##    class       date variable value
+## 16     A 2000-01-05   value3    30
+## 17     B 2015-01-05   value3    27
+## 18     B 2015-01-05   value3    28</code></pre>
+<p>同樣的，也能夠透過函數subset來達到這樣的效果</p>
+<pre><code>提示：
+subset依據要求篩選資料。
+
+其中常用的命令包含：
+x  要篩選資料
+subset  預設為decreasing = FALSE，表示大排到小
+</code></pre>
+<pre class="r"><code>subset(x=dat.d,subset=variable==&quot;value3&quot;)</code></pre>
+<pre><code>##    class       date variable value
+## 13     A 2000-01-05   value3    21
+## 14     B 2015-01-05   value3    25
+## 15     A 2000-01-05   value3    23
+## 16     A 2000-01-05   value3    30
+## 17     B 2015-01-05   value3    27
+## 18     B 2015-01-05   value3    28</code></pre>
+<pre class="r"><code>subset(x=dat.d,subset=variable==&quot;value3&quot;&amp;value&gt;25)</code></pre>
+<pre><code>##    class       date variable value
+## 16     A 2000-01-05   value3    30
+## 17     B 2015-01-05   value3    27
+## 18     B 2015-01-05   value3    28</code></pre>
+</div>
+<div class="section level2">
+<h2>欄位計算</h2>
+<hr />
+<p>dat.c中，如果要將value1、value2、value3兩兩相乘與三者相乘為下列資料</p>
+<p>一般使用者會如此操作</p>
+<pre class="r"><code>dat.cc=dat.c
+dat.cc$value12=dat.cc$value1*dat.cc$value2
+dat.cc$value13=dat.cc$value1*dat.cc$value3
+dat.cc$value23=dat.cc$value2*dat.cc$value3
+dat.cc$value123=dat.cc$value1*dat.cc$value2*dat.cc$value3
+dat.cc</code></pre>
+<pre><code>##   class       date value1 value2 value3 value12 value13 value23 value123
+## 1     A 2000-01-05      2     11     21      22      42     231      462
+## 2     B 2015-01-05      1     13     25      13      25     325      325
+## 3     A 2000-01-05      3     15     23      45      69     345     1035
+## 4     A 2000-01-05      5     17     30      85     150     510     2550
+## 5     B 2015-01-05      4     14     27      56     108     378     1512
+## 6     B 2015-01-05      6     12     28      72     168     336     2016</code></pre>
+<p>這樣會使得程式碼貴於繁雜，因此會利用with函數來減少程式碼</p>
+<pre><code>提示：
+with表示在指定資料中進行操作。
+
+其中常用的命令包含：
+data  要操作的資料
+expr  操作內容
+</code></pre>
+<p>程式碼則可以更改為下列</p>
+<pre class="r"><code>dat.cc=dat.c
+
+dat.cc$value12=with(dat.cc,value1*value2)
+dat.cc$value13=with(dat.cc,value1*value3)
+dat.cc$value23=with(dat.cc,value2*value3)
+dat.cc$value123=with(dat.cc,value1*value2*value3)
+dat.cc</code></pre>
+<pre><code>##   class       date value1 value2 value3 value12 value13 value23 value123
+## 1     A 2000-01-05      2     11     21      22      42     231      462
+## 2     B 2015-01-05      1     13     25      13      25     325      325
+## 3     A 2000-01-05      3     15     23      45      69     345     1035
+## 4     A 2000-01-05      5     17     30      85     150     510     2550
+## 5     B 2015-01-05      4     14     27      56     108     378     1512
+## 6     B 2015-01-05      6     12     28      72     168     336     2016</code></pre>
+<p>然而這樣程式碼還是十分繁多，因此可以使用dplyr套件中的%&gt;%與mutate進行計算，%&gt;%表示在執行%&gt;%左側的動作後，接續進行%&gt;%右側的程式碼</p>
+<p>僅第一次需要執行此步驟進行安裝。</p>
+<p>呼叫套件</p>
+<pre><code>提示：
+mutate中放置要計算的欄位與公式。
+</code></pre>
+<p>則可以將dat.cc如下表示</p>
+<pre class="r"><code>library(dplyr)
+dat.cc=dat.c%&gt;%mutate(value12=value1*value2,
+               value13=value1*value3,
+               value23=value2*value3,
+               value123=value1*value2*value3)
+dat.cc</code></pre>
+<pre><code>##   class       date value1 value2 value3 value12 value13 value23 value123
+## 1     A 2000-01-05      2     11     21      22      42     231      462
+## 2     B 2015-01-05      1     13     25      13      25     325      325
+## 3     A 2000-01-05      3     15     23      45      69     345     1035
+## 4     A 2000-01-05      5     17     30      85     150     510     2550
+## 5     B 2015-01-05      4     14     27      56     108     378     1512
+## 6     B 2015-01-05      6     12     28      72     168     336     2016</code></pre>
+</div>
+<div class="section level2">
+<h2>資料整併</h2>
+<hr />
+<p>在前面已經將dat.c轉置為dat.d，dat.d的value欄位中有value1、value2、value3，三種變數。要進行資料統整、整併時；例如要計算value1、value2、value3的最小值、最大值、平均值，使用dplyr中%&gt;%、group_by、summarise函數能快速地進行統整與計算，如下。</p>
+<pre><code>提示：
+group_by表示要依據那些欄位名稱進行群組，
+</code></pre>
+<pre><code>提示：
+summarise中放置要統整計算的欄位與公式。
+</code></pre>
+<pre><code>提示：
+min 取出給定資料的最小值。
+
+其中常用的命令包含：
+x  要計算的資料
+na.rm  是否移除na數值，預設為na.rm = FALSE
+</code></pre>
+<pre><code>提示：
+max 取出給定資料的最大值。
+
+其中常用的命令包含：
+x  要計算的資料
+na.rm  是否移除na數值，預設為na.rm = FALSE
+</code></pre>
+<pre><code>提示：
+mean 取出給定資料的平均值。
+
+其中常用的命令包含：
+x  要計算的資料
+na.rm  是否移除na數值，預設為na.rm = FALSE
+</code></pre>
+<p>由此，可以利用下列方式得到新資料dat.dd</p>
+<pre class="r"><code>library(dplyr)
+data.dd=dat.d%&gt;%group_by(variable)%&gt;%summarise(Min=min(value),
+                                               Max=max(value),
+                                               Mean=mean(value))
+data.dd</code></pre>
+<pre><code>## # A tibble: 3 x 4
+##   variable   Min   Max     Mean
+##     &lt;fctr&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1   value1     1     6  3.50000
+## 2   value2    11    17 13.66667
+## 3   value3    21    30 25.66667</code></pre>
+<p>如果要同時依date與variable進行群組計算則在group_by中添加date即可</p>
+<pre class="r"><code>library(dplyr)
+data.dd=dat.d%&gt;%group_by(date,variable)%&gt;%summarise(Min=min(value),
+                                                    Max=max(value),
+                                                    Mean=mean(value))
+data.dd</code></pre>
+<pre><code>## # A tibble: 6 x 5
+## # Groups:   date [?]
+##         date variable   Min   Max      Mean
+##       &lt;fctr&gt;   &lt;fctr&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
+## 1 2000-01-05   value1     2     5  3.333333
+## 2 2000-01-05   value2    11    17 14.333333
+## 3 2000-01-05   value3    21    30 24.666667
+## 4 2015-01-05   value1     1     6  3.666667
+## 5 2015-01-05   value2    12    14 13.000000
+## 6 2015-01-05   value3    25    28 26.666667</code></pre>
+</div>
+</div>
+
+		</div>
+		
+<div class="post__tags tags clearfix">
+	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="m4.73135 3.3795002q0-.5597-.39604-.9557-.39604-.3961-.95577-.3961-.55974 0-.95578.3961-.39604.396-.39604.9557 0 .5598.39604.9558.39604.3961.95578.3961.55973 0 .95577-.3961.39604-.396.39604-.9558zm11.26865 6.0832q0 .5596998-.39076.9504998l-5.18548 5.196q-.41188.3908-.9610504.3908-.55974 0-.9505-.3908l-7.5511496-7.5616998q-.40132-.3907-.68119-1.0666-.27987-.6759-.27987-1.2357v-4.3934q0-.54920004.40132-.95050004.40132-.4013.9505-.4013h4.39339q.55974 0 1.23565.2799.67591.2798 1.07723.6812l7.55115 7.54060004q.39076.4118.39076.961z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item"><a class="tags__link" href="/tags/r/" rel="tag">R</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/tutorial/" rel="tag">tutorial</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/reshape/" rel="tag">reshape</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/reshape2/" rel="tag">reshape2</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/dplyr/" rel="tag">dplyr</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/data.table/" rel="tag">data.table</a></li>
+	</ul>
+</div>
+
+	</article>
+	
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="fish ko avatar" src="/img/inuyasha%20.JPG" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About fish ko</span>
+	</div>
+	<div class="authorbox__description">
+		try to work this out.......
+	</div>
+</div>
+	
+<nav class="post-nav row clearfix" itemscope="itemscope" itemtype="http://schema.org/SiteNavigationElement">
+	<div class="post-nav__item post-nav__item--prev col-1-2">
+		<a class="post-nav__link" href="/post/r-%E6%95%99%E5%AD%B8-ch03-%E8%BF%B4%E5%9C%88/" rel="prev"><span class="post-nav__caption">«Previous</span><p class="post-nav__post-title">R 教學 - CH03 迴圈</p></a>
+	</div>
+	<div class="post-nav__item post-nav__item--next col-1-2">
+		<a class="post-nav__link" href="/post/2018-01-07-health.risk.mental.issue.weather/" rel="next"><span class="post-nav__caption">Next»</span><p class="post-nav__post-title">健康風險-天氣與精神異常</p></a>
+	</div>
+</nav>
+
+	
+<div class="comments">
+	<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "seimwiwa" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+<aside class="sidebar" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">
+	
+<div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="//google.com/search">
+		<label>
+			<span class="screen-reader-text">Search for:</span>
+			<input class="widget-search__field" type="search" placeholder="SEARCH..." value="" name="q">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+	
+<div class="widget-recent widget">
+	<h4 class="widget__title">Recent Posts</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/post/2018-01-07-health.risk.mental.issue.weather/">健康風險-天氣與精神異常</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch04-%E8%B3%87%E6%96%99%E8%99%95%E7%90%86/">R 教學 - CH04 資料處理</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch03-%E8%BF%B4%E5%9C%88/">R 教學 - CH03 迴圈</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch02-%E5%AD%98%E5%8F%96%E8%B3%87%E6%96%99/">R 教學 - CH02 存取資料</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch01-%E5%9F%BA%E6%9C%AC%E8%AA%9E%E6%B3%95/">R 教學 - CH01 基本語法</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch00-%E5%BC%95%E8%A8%80/">R 教學 - CH00 引言</a></li>
+		</ul>
+	</div>
+</div>
+
+	
+<div class="widget-categories widget">
+	<h4 class="widget__title">Categories</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/categories/r-tutorial">R-Tutorial</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/reserch">Reserch</a></li>
+		</ul>
+	</div>
+</div>
+	
+
+	
+<div class="widget-taglist widget">
+	<h4 class="widget__title">Tags</h4>
+	<div class="widget__content">
+		<a class="widget__link widget__link--taglist" href="/tags/apply" title="apply">apply</a>
+		<a class="widget__link widget__link--taglist" href="/tags/data.table" title="data.table">data.table</a>
+		<a class="widget__link widget__link--taglist" href="/tags/dlnm" title="dlnm">dlnm</a>
+		<a class="widget__link widget__link--taglist" href="/tags/dplyr" title="dplyr">dplyr</a>
+		<a class="widget__link widget__link--taglist" href="/tags/for" title="for">for</a>
+		<a class="widget__link widget__link--taglist" href="/tags/health-risk-assessment" title="health-risk-assessment">health-risk-assessment</a>
+		<a class="widget__link widget__link--taglist" href="/tags/introduction" title="introduction">introduction</a>
+		<a class="widget__link widget__link--taglist" href="/tags/load" title="load">load</a>
+		<a class="widget__link widget__link--taglist" href="/tags/mental-issue" title="mental-issue">mental-issue</a>
+		<a class="widget__link widget__link--taglist" href="/tags/r" title="r">r</a>
+		<a class="widget__link widget__link--taglist" href="/tags/read" title="read">read</a>
+		<a class="widget__link widget__link--taglist" href="/tags/reshape" title="reshape">reshape</a>
+		<a class="widget__link widget__link--taglist" href="/tags/reshape2" title="reshape2">reshape2</a>
+		<a class="widget__link widget__link--taglist" href="/tags/save" title="save">save</a>
+		<a class="widget__link widget__link--taglist" href="/tags/tutorial" title="tutorial">tutorial</a>
+		<a class="widget__link widget__link--taglist" href="/tags/weather-effect" title="weather-effect">weather-effect</a>
+		<a class="widget__link widget__link--taglist" href="/tags/write" title="write">write</a>
+		<a class="widget__link widget__link--taglist" href="/tags/xls" title="xls">xls</a>
+		<a class="widget__link widget__link--taglist" href="/tags/xlsx" title="xlsx">xlsx</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%81%a5%e5%ba%b7%e9%a2%a8%e9%9a%aa%e8%a9%95%e4%bc%b0" title="健康風險評估">健康風險評估</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%84%b2%e5%ad%98%e5%9e%8b%e6%85%8b" title="儲存型態">儲存型態</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%a4%a9%e6%b0%a3" title="天氣">天氣</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%ad%98%e5%8f%96%e8%b3%87%e6%96%99" title="存取資料">存取資料</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e6%9f%a5%e7%9c%8b%e7%89%a9%e4%bb%b6" title="查看物件">查看物件</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e7%89%a9%e4%bb%b6%e5%ae%9a%e7%be%a9" title="物件定義">物件定義</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e7%b2%be%e7%a5%9e%e7%95%b0%e5%b8%b8" title="精神異常">精神異常</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e8%b3%87%e6%96%99%e7%89%a9%e4%bb%b6" title="資料物件">資料物件</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e8%bf%b4%e5%9c%88" title="迴圈">迴圈</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e9%81%8b%e7%ae%97" title="運算">運算</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e9%9d%9e%e7%b7%9a%e6%80%a7%e9%81%9e%e5%bb%b6%e6%a8%a1%e5%9e%8b" title="非線性遞延模型">非線性遞延模型</a>
+	</div>
+</div>
+</aside>
+
+	</div>
+		<footer class="footer" itemscope="itemscope" itemtype="http://schema.org/WPFooter">
+			<div class="container container-inner">
+				<p class="footer__copyright">&copy; 2018 魚缸. <span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad theme</a>.</span></p>
+			</div>
+		</footer>
+	</div>
+
+<script>
+	var navigation = responsiveNav(".menu", {
+		navClass: "menu--collapse",
+	});
+</script>
+</body>
+</html>

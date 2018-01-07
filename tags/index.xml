@@ -6,89 +6,278 @@
     <description>Recent content in Tags on 魚缸</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ch</language>
-    <lastBuildDate>Wed, 02 Apr 2014 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 30 Aug 2017 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Development</title>
-      <link>/tags/development/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      <title>Apply</title>
+      <link>/tags/apply/</link>
+      <pubDate>Wed, 30 Aug 2017 00:00:00 +0000</pubDate>
       
-      <guid>/tags/development/</guid>
+      <guid>/tags/apply/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Go</title>
-      <link>/tags/go/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      <title>Data.table</title>
+      <link>/tags/data.table/</link>
+      <pubDate>Thu, 31 Aug 2017 00:00:00 +0000</pubDate>
       
-      <guid>/tags/go/</guid>
+      <guid>/tags/data.table/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Golang</title>
-      <link>/tags/golang/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      <title>Dlnm</title>
+      <link>/tags/dlnm/</link>
+      <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/golang/</guid>
+      <guid>/tags/dlnm/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Hugo</title>
-      <link>/tags/hugo/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      <title>Dplyr</title>
+      <link>/tags/dplyr/</link>
+      <pubDate>Thu, 31 Aug 2017 00:00:00 +0000</pubDate>
       
-      <guid>/tags/hugo/</guid>
+      <guid>/tags/dplyr/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Plot</title>
-      <link>/tags/plot/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>For</title>
+      <link>/tags/for/</link>
+      <pubDate>Wed, 30 Aug 2017 00:00:00 +0000</pubDate>
       
-      <guid>/tags/plot/</guid>
+      <guid>/tags/for/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>R Markdown</title>
-      <link>/tags/r-markdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>Health Risk Assessment</title>
+      <link>/tags/health-risk-assessment/</link>
+      <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/r-markdown/</guid>
+      <guid>/tags/health-risk-assessment/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Regression</title>
-      <link>/tags/regression/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>Introduction</title>
+      <link>/tags/introduction/</link>
+      <pubDate>Fri, 25 Aug 2017 00:00:00 +0000</pubDate>
       
-      <guid>/tags/regression/</guid>
+      <guid>/tags/introduction/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Templates</title>
-      <link>/tags/templates/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      <title>Load</title>
+      <link>/tags/load/</link>
+      <pubDate>Sun, 27 Aug 2017 00:00:00 +0000</pubDate>
       
-      <guid>/tags/templates/</guid>
+      <guid>/tags/load/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Themes</title>
-      <link>/tags/themes/</link>
-      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      <title>Mental Issue</title>
+      <link>/tags/mental-issue/</link>
+      <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/themes/</guid>
+      <guid>/tags/mental-issue/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>R</title>
+      <link>/tags/r/</link>
+      <pubDate>Thu, 31 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Read</title>
+      <link>/tags/read/</link>
+      <pubDate>Sun, 27 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/read/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Reshape</title>
+      <link>/tags/reshape/</link>
+      <pubDate>Thu, 31 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/reshape/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Reshape2</title>
+      <link>/tags/reshape2/</link>
+      <pubDate>Thu, 31 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/reshape2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Save</title>
+      <link>/tags/save/</link>
+      <pubDate>Sun, 27 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/save/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Tutorial</title>
+      <link>/tags/tutorial/</link>
+      <pubDate>Thu, 31 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/tutorial/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Weather Effect</title>
+      <link>/tags/weather-effect/</link>
+      <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/weather-effect/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Write</title>
+      <link>/tags/write/</link>
+      <pubDate>Sun, 27 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/write/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Xls</title>
+      <link>/tags/xls/</link>
+      <pubDate>Sun, 27 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/xls/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Xlsx</title>
+      <link>/tags/xlsx/</link>
+      <pubDate>Sun, 27 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/xlsx/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>健康風險評估</title>
+      <link>/tags/%E5%81%A5%E5%BA%B7%E9%A2%A8%E9%9A%AA%E8%A9%95%E4%BC%B0/</link>
+      <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/%E5%81%A5%E5%BA%B7%E9%A2%A8%E9%9A%AA%E8%A9%95%E4%BC%B0/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>儲存型態</title>
+      <link>/tags/%E5%84%B2%E5%AD%98%E5%9E%8B%E6%85%8B/</link>
+      <pubDate>Sat, 26 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/%E5%84%B2%E5%AD%98%E5%9E%8B%E6%85%8B/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>天氣</title>
+      <link>/tags/%E5%A4%A9%E6%B0%A3/</link>
+      <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/%E5%A4%A9%E6%B0%A3/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>存取資料</title>
+      <link>/tags/%E5%AD%98%E5%8F%96%E8%B3%87%E6%96%99/</link>
+      <pubDate>Sun, 27 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/%E5%AD%98%E5%8F%96%E8%B3%87%E6%96%99/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>查看物件</title>
+      <link>/tags/%E6%9F%A5%E7%9C%8B%E7%89%A9%E4%BB%B6/</link>
+      <pubDate>Sat, 26 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/%E6%9F%A5%E7%9C%8B%E7%89%A9%E4%BB%B6/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>物件定義</title>
+      <link>/tags/%E7%89%A9%E4%BB%B6%E5%AE%9A%E7%BE%A9/</link>
+      <pubDate>Sat, 26 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/%E7%89%A9%E4%BB%B6%E5%AE%9A%E7%BE%A9/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>精神異常</title>
+      <link>/tags/%E7%B2%BE%E7%A5%9E%E7%95%B0%E5%B8%B8/</link>
+      <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/%E7%B2%BE%E7%A5%9E%E7%95%B0%E5%B8%B8/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>資料物件</title>
+      <link>/tags/%E8%B3%87%E6%96%99%E7%89%A9%E4%BB%B6/</link>
+      <pubDate>Sat, 26 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/%E8%B3%87%E6%96%99%E7%89%A9%E4%BB%B6/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>迴圈</title>
+      <link>/tags/%E8%BF%B4%E5%9C%88/</link>
+      <pubDate>Wed, 30 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/%E8%BF%B4%E5%9C%88/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>運算</title>
+      <link>/tags/%E9%81%8B%E7%AE%97/</link>
+      <pubDate>Sat, 26 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/%E9%81%8B%E7%AE%97/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>非線性遞延模型</title>
+      <link>/tags/%E9%9D%9E%E7%B7%9A%E6%80%A7%E9%81%9E%E5%BB%B6%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/%E9%9D%9E%E7%B7%9A%E6%80%A7%E9%81%9E%E5%BB%B6%E6%A8%A1%E5%9E%8B/</guid>
       <description></description>
     </item>
     
