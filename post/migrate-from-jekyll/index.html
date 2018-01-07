@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="ch">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Migrate to Hugo from Jekyll</title>
-<meta name="description" content=" John Doe&#39;s Personal blog about everything">
+<meta name="description" content="try to work this out.......">
 <meta name="generator" content="Hugo 0.32.2" />
 <meta property="og:title" content="Migrate to Hugo from Jekyll" />
 <meta property="og:description" content="Move static content to static Jekyll has a rule that any directory not starting with _ will be copied as-is to the _site output. Hugo keeps all static content under static. You should therefore move it all there. With Jekyll, something that looked like
@@ -37,15 +37,22 @@
 <script type="text/javascript" src="/js/scripts.js"></script>
 <link rel="shortcut icon" href="/favicon.ico">
 
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-112058330-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
 </head>
 <body class="body body-right-sidebar mobile" itemscope="itemscope" itemtype="http://schema.org/WebPage">
 	<div class="container container-outer">
 		<header class="header" itemscope="itemscope" itemtype="http://schema.org/WPHeader">
 			<div class="container container-inner clearfix">
 				<div class="logo" role="banner" itemscope="itemscope" itemtype="http://schema.org/Brand">
-					<a class="logo__link" href="/" title="Mainroad" rel="home">
-						<h1 class="logo__title">Mainroad</h1>
-						<h2 class="logo__tagline">Just another site</h2>
+					<a class="logo__link" href="/" title="魚缸" rel="home">
+						<h1 class="logo__title">魚缸</h1>
+						<h2 class="logo__tagline">fish site</h2>
 					</a>
 				</div>
 			</div>
@@ -248,13 +255,13 @@ Liquid::Template.register_tag('image', Jekyll::ImageTag)
 	
 <div class="authorbox clearfix">
 	<figure class="authorbox__avatar">
-		<img alt="John Doe avatar" src="/img/avatar.png" class="avatar" height="90" width="90">
+		<img alt="fish ko avatar" src="/img/inuyasha%20.JPG" class="avatar" height="90" width="90">
 	</figure>
 	<div class="authorbox__header">
-		<span class="authorbox__name">About John Doe</span>
+		<span class="authorbox__name">About fish ko</span>
 	</div>
 	<div class="authorbox__description">
-		John Doe&#39;s true identity is unknown. Maybe he is a successful blogger or writer. Nobody knows it.
+		try to work this out.......
 	</div>
 </div>
 	
@@ -268,6 +275,29 @@ Liquid::Template.register_tag('image', Jekyll::ImageTag)
 </nav>
 
 	
+<div class="comments">
+	<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "seimwiwa" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
 </main>
 
 <aside class="sidebar" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">
@@ -329,7 +359,7 @@ Liquid::Template.register_tag('image', Jekyll::ImageTag)
 	</div>
 		<footer class="footer" itemscope="itemscope" itemtype="http://schema.org/WPFooter">
 			<div class="container container-inner">
-				<p class="footer__copyright">&copy; 2018 Mainroad. <span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad theme</a>.</span></p>
+				<p class="footer__copyright">&copy; 2018 魚缸. <span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad theme</a>.</span></p>
 			</div>
 		</footer>
 	</div>
