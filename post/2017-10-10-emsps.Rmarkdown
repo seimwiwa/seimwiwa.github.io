@@ -1,0 +1,143 @@
+---
+title: 緊急醫療救護服務預測系統
+author: seimwiwa
+date: '2017-10-10'
+slug: emsps
+categories:
+  - Reserch
+tags:
+  - R
+---
+
+# 簡介
+
+我國醫療救護資源不足問題已經日益增大，此議題尤以重度急救責任醫院為重。
+
+從g0v的[全國重度級急救責任醫院急診即時訊息](http://er.mohw.g0v.tw/#/dashboard/file/all.json)中可以看見相關指標如：
+
+- [等待住院人數](http://er.mohw.g0v.tw/#/dashboard/file/all.json?panelId=1&fullscreen)
+- [等待加護病房人數](http://er.mohw.g0v.tw/#/dashboard/file/all.json?panelId=2&fullscreen)
+- [等待推床人數](http://er.mohw.g0v.tw/#/dashboard/file/all.json?panelId=3&fullscreen)
+- [急診已滿床通報](http://er.mohw.g0v.tw/#/dashboard/file/all.json?panelId=6&fullscreen)
+
+這項研究的目的是為了解決「急診已滿床通報」的問題。通常在文獻中會以寫作capacity of emergemcy department bed capacity，也就是急診室床位數。
+
+這個指標並不是用來說明「已滿床」字面上的問題；事實上急診室到底有幾張病床可以使用並不是重要議題，其引申的意涵是「急診室人力資源是否能處理所有病患」。也就是說即便病床再多，只要醫護人員處理能力的總和不足以處理傷患，病人就會持續增加，病床數就會鄰近滿床。
+
+因此，所謂已滿床的問題並不是要解決床位數量，而是要解決「單位時間內醫院急診室的處理能力」；英文的專有名詞通常作[throughput](http://www.hhnmag.com/articles/4359-emergency-department-throughput)。當throughput高，代表單位時間內處理的病患較多；反之則否。
+
+如果能夠增加單位時間內醫院急診室的處理能力，就不會發生滿床問題，就算床位的數量很少也能夠對應大量傷患的突發狀況。因此增加單位時間內醫院急診室的處理能力的方法可以被整理成以下：
+
+1. 增加醫護人員數量
+2. 提高每位醫護人員的處理能力
+3. 利用檢傷分類排定輕重以及合適的醫院將病患分流
+
+國內目前的現況已經利用了檢傷分類且醫護人員都有持續進行進修訓練，所以大部分專家學者與媒體所呼籲的就是增加醫護人員的數量。如此，可以提高急診的單位時間處理能力，同時可以將醫護人員的平均工時縮短增加職業壽命。
+
+然而醫護人員的培訓時間動輒7到10年，即便現在立刻引入更多民眾加入醫療領域的行列，也需要等待數年後才能解決現況。
+
+假設每位病患處理時間都一樣時，醫護人員人數乘以單位時間內醫院急診室的處理能力，代表一小時內急診室可以處理的傷患數量。如果這個數量大於一小時內出現的病患數量，就不會發生滿床現象。如果可以事前得知急救資源的需求，在急救尖峰時刻安排更多人手，非尖峰時刻引用「值勤/待命」的處理方式，就可以解決：
+
+- 病患增加時「單位時間內醫院急診室的處理能力」不足
+- 醫護人員工時過長
+- 急救資源離峰時段人手過多資源浪費
+
+等問題。
+
+因此開發「緊急醫療救護資源預測系統」來預測未來：
+
+1.  每小時內病患數量
+2.  病患求救地點
+3.  病患嚴重程度（影響各病患所需要救護的時間與應該分流至何種醫院）
+
+就能夠透過數據事先安排醫護人員數量以及休息時間，作為短期的應對措施弭補醫護人員培訓完成前的空窗期。
+
+##  解決方案
+
+### 現行階段
+
+實行的方式首先透過在[Extreme Gradient Boosting Model](https://github.com/dmlc/xgboost)中加入環境數據因子、歷史急救資料、時間因素預測未來新北市每日急救人次。數據使用2005到2012的歷史急救資料與環境參數。亂數擷取50%數據進行模型擬合與測試，模型建置時依據RMSE、RMSE/Mean、Error rate、Linear Regression、T-test來驗證實際與模擬數值的差異。最中模型完成後用來預測2016年至今使用急救資源的人數，引用外部資源[內政部統計處─消防緊急救護服務人次]('http://statis.moi.gov.tw/micst/stmain.jsp?sys=100)，了解實際應用後各項誤差指標的變化決定是否可以做更深入的預測。
+
+### 未來應用
+若上述模型建置測試完成後誤差值在有關單位認可，後續應添加細緻的時空間社會、經濟、醫療相關因子(如:各年齡人口數、人口流動、交通、房價、疾病盛行率、死亡率)做長期的每小時時間空間預測。
+
+##  實行成效
+
+### 數據擬和階段：
+
+- 樣本數為1461筆
+
+- 平均每日急救人次為294人
+
+- RMSE約為0.22
+
+- RMSE/mean為0.0007482993
+
+- 誤差為0.07%
+
+### 數據測試階段：
+
+- 樣本數為1461筆
+
+- 平均每日急救人次為293人
+
+- RMSE約為25.4
+
+- RMSE/mean為0.08668942
+
+- 誤差為8.67%
+
+- 將預測值設為自變數，實際值作為應變數進行Linear Regression檢定：
+
+```{r echo=FALSE,message=FALSE,warning=F}
+library(plotly)
+library(dplyr)
+load("F:/RProject/EMSPS.ver01/data.sub")
+options(na.action="na.pass")
+data.sub$ErrorRate=(data.sub$Prediction-data.sub$Real)/data.sub$Real%>%as.numeric()
+```
+
+```{r echo=FALSE,message=FALSE,warning=F}
+summary(lm(Real~Prediction,data.sub))
+```
+
+- 將預測值與實際值進行T test檢定：
+
+```{r echo=FALSE,message=FALSE,warning=F}
+t.test(data.sub$Real,data.sub$Prediction)
+```
+  
+
+  
+3.  成果圖示
+
+- 預測與實際值對應分布圖
+
+```{r echo=FALSE,message=FALSE,warning=F}
+plot_ly(data.sub,x=~Real)%>%
+  add_markers(y=~Prediction)%>%
+  layout(xaxis = list(title="Real Data"), yaxis = list(title="Model Prediction"))
+```
+
+- 預測與實際值逐日分布圖
+
+```{r echo=FALSE,message=FALSE,warning=F}
+plot_ly(data.sub,x=~Date)%>%
+  add_markers(y=~Prediction,name="Prediction",opacity = 0.5)%>%
+  add_markers(y=~Real,name="Real",opacity = 0.5)%>%
+  add_lines(y=~fitted(loess(Prediction~as.numeric(Date))),name="Loess Line (Prediction)") %>%
+  add_lines(y=~fitted(loess(Real~as.numeric(Date))),name="Loess Line (Real)") %>%
+  layout(xaxis = list(title="Date"), yaxis = list(title="Emergency medical servise vistior"))
+```
+
+- 預測值誤差密度圖
+
+```{r echo=FALSE,message=FALSE,warning=F}
+Error_Density=data.frame(x=density(data.sub$ErrorRate)$x,y=density(data.sub$ErrorRate)$y)
+Error_min_y=min(Error_Density$y,na.rm=T)
+Error_max_y=max(Error_Density$y,na.rm=T)
+plot_ly(data.sub)%>%
+  add_histogram(x=~ErrorRate,name="Histogram")%>%
+  add_lines(data=Error_Density,x=~x,y=~y,yaxis="y2",line=list(width=3),name="Density")%>%
+  layout(yaxis2=list(overlaying="y",side="right",range=c(Error_min_y,Error_max_y),showgrid=F,zeroline=F),xaxis = list(title="Error rate(%) of prediction of emergency medical servise vistior"), yaxis = list(title="Count"))
+```

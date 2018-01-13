@@ -1,0 +1,13 @@
+---
+title: 分析CDC登革熱資料-CH01-RGIS篇
+author: seimwiwa
+date: '2018-01-07'
+slug: 分析cdc登革熱資料-ch01-rgis篇
+categories:
+  - R tutorial
+tags:
+  - GIS
+  - CDC
+  - Dengue fever
+---
+
