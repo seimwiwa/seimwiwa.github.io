@@ -1,0 +1,250 @@
+---
+title: R 教學 - CH05 敘述性統計指標
+author: seimwiwq
+date: '2018-05-03'
+slug: r-教學-ch05-敘述性統計指標
+categories:
+  - R tutorial
+tags:
+  - data.table
+  - dplyr
+  - Descriptive Statistics
+---
+
+
+#敘述性統計指標
+
+***
+
+很久沒更新了.........
+對......
+
+在這個篇章會講幾項常用的統計指標，其中包含：平均值、變異數、標準差、最小值、最大值、百分位值、95%區間數值
+
+如果你想看各個指標的計算方法或是意義，請Google
+這邊僅會介紹怎樣操作
+
+此外，還是會帶一點資料處理
+
+##統計指標
+
+這裡用內建的iris資料作為範例
+
+```{r}
+summary(iris)
+```
+
+其中，我們先使用**Sepal.Length**作為範例。
+
+統計指標|R中的函數
+--------|--------
+平均值|mean
+變異數|var
+標準差|sd
+最小值|min
+最大值|max
+百分位值|quantile
+
+**95%區間數值放在後面講**
+
+知道上面這些之後，可以從平均值開始嘗試
+
+```{r,warning=F,message=F}
+#平均值
+mean(iris$Sepal.Length)
+
+#變異數
+var(iris$Sepal.Length)
+
+#標準差
+sd(iris$Sepal.Length)
+
+#最小值
+min(iris$Sepal.Length)
+
+#最大值
+max(iris$Sepal.Length)
+
+#百分位值
+quantile(iris$Sepal.Length)
+
+```
+
+此處有一點可以注意，如果一串數列其中帶有NA值，經由上述函數計算後會發生什麼
+
+這邊用c函數在iris$Sepal.Length前面添加一筆NA數值，並把心數列稱作a
+
+
+```{r,error=T,warning=F,message=F}
+a=c(NA,iris$Sepal.Length)
+
+mean(a)
+var(a)
+sd(a)
+min(a)
+max(a)
+quantile(a)
+```
+
+很悲慘吧，因此在處理這些指標時，必須在函數中加入**na.rm=TRUE**的指令，用以排除NA值
+
+~~~~~
+提示：
+mean、var、sd、min、max、quantile中可以添加na.rm=TRUE排除遺失值
+
+na.rm 不指定時默認為na.rm=FALSE，表示不排除遺失值，如果數列中包含NA，結果將會錯誤
+~~~~~
+
+再嘗試一遍，並添加na.rm=TRUE
+
+```{r,warning=F,message=F}
+mean(a,na.rm=TRUE)
+var(a,na.rm=TRUE)
+sd(a,na.rm=TRUE)
+min(a,na.rm=TRUE)
+max(a,na.rm=TRUE)
+quantile(a,na.rm=TRUE)
+```
+
+
+在上面的講解中，應該有發現quantile函數的輸出是包含0、25、50、75、100%的各項數值
+如果今天只需要特定的幾個百分位，應該怎麼操作呢?
+
+~~~~~
+提示：
+quantile函數可以指定要輸出的百分位值
+
+probs 默認為seq(0, 1, 0.25)，表示從0到1，每隔0.25取一個數值，也就是0、25、50、75、100%
+na.rm 不指定時默認為na.rm=FALSE，表示不排除遺失值，如果數列中包含NA，結果將會錯誤
+names 是否要輸出百分位名稱，默認為names=TRUE表示要輸出百分位名稱
+~~~~~
+
+所以，如果指定要輸出iris$Sepal.Length的第一百分位值稱作q1，第三百分位為q3
+再讓兩者相減，則應該這麼做
+
+```{r,warning=F,message=F}
+q1=quantile(iris$Sepal.Length,probs = c(0.25),names = FALSE)
+q3=quantile(iris$Sepal.Length,probs = c(0.75),names = FALSE)
+
+
+q1
+q3
+
+q3-q1
+```
+
+又，今天如果要輸出20%、40%、60%、80%
+則可以這麼處理
+
+```{r,warning=F,message=F}
+quantile(iris$Sepal.Length,probs = c(.2,.4,.6,.8),names = FALSE)
+```
+
+以上大概就是基本統計指標的介紹拉
+
+##大量的輸出統計指標
+
+接下來我們可以從iris出發，試想
+
+在iris資料中有`r length(names(iris))`筆資料，包含`r paste(names(iris),collapse="、")`
+
+同時內部的各個資料中，屬於數值資料者有`r sum(sapply(iris, class)=="numeric")`筆
+
+如下
+
+
+```{r,warning=F,message=F}
+str(iris)
+
+```
+
+如果要針對四個欄位做四次mean、sd、min.....不是會累死嗎
+
+所以，延續上一次所提到的資料整理，我們可以首先把iris資料中的Species忽視掉
+
+將剩餘的幾個欄位轉換成這種形式
+
+```{r echo=F,warning=F,message=F}
+library(data.table)
+library(dplyr)
+
+iris%>%select(-Species)%>%data.table::melt()%>%head
+```
+
+
+所以我們首先輸入兩個套件data.table與dplyr
+
+```{r echo=F,warning=F,message=F}
+library(data.table)
+library(dplyr)
+```
+
+利用dplyr中select指令剔除Species欄位，而後用data.table的melt轉置，用head指定輸出前20項
+
+```{r,warning=F,message=F}
+iris%>%
+  select(-Species)%>%
+  melt()%>%
+  head(n=20)
+```
+
+這裡可以看到，資料被轉換成variable跟value兩欄位
+
+接著可以另用dplyr的group_by指定依據variable識別不同欄位進行summarise
+
+而要summarise的內容就是前面說的敘述性統計指標拉
+
+最後再用mutate來計算上下95%CI的數值拉
+
+
+```{r,warning=F,message=F}
+iris%>%
+  select(-Species)%>%
+  melt()%>%
+  group_by(variable)%>%
+  summarise(N=n(),
+            Missing=value%>%is.na%>%sum,
+            Mean=value%>%mean(na.rm=T),
+            SD=value%>%mean(na.rm=T),
+            Minimim=value%>%mean(na.rm=T),
+            Q1=value%>%mean(na.rm=T),
+            Q2=value%>%mean(na.rm=T),
+            Q3=value%>%mean(na.rm=T),
+            Maximum=value%>%mean(na.rm=T))%>%
+  mutate(SE=SD/sqrt(N),
+         LowerCI=Mean-qt(1-(0.05/2),N-1)*SE,
+         UpperCI=Mean+qt(1-(0.05/2),N-1)*SE)
+```
+
+也可以讓表格中只呈現依不同column和類別(這裡用Species代表)的Mean ( Q1 - Q3 )數值
+
+令iris.sep是依據Species轉置的數據
+而iris.all則是直接轉置全部數值的數據，同時用mutate新增一欄Species，表示為All代表是所有數值的種類
+
+再以rbind將兩者合併，用group_by還有summarise來取得敘述性統計指標
+
+把mean、q1、q3用paste形成Text欄位
+再以dcast指定variable對上Species的轉至資料，在中以Text之文字填入
+
+```{r,warning=F,message=F}
+iris.sep=iris%>%
+  melt(id.vars="Species")
+
+iris.all=iris%>%
+  select(-Species)%>%
+  melt()%>%
+  mutate(Species="All")
+
+iris.all%>%
+  rbind(.,iris.sep)%>%
+  group_by(Species,variable)%>%
+  summarise(Mean=value%>%mean(na.rm=T)%>%round(.,2),
+            Q1=value%>%mean(na.rm=T)%>%round(.,2),
+            Q3=value%>%mean(na.rm=T)%>%round(.,2),
+            Text=paste(Mean,"(",Q1,"-",Q3,")"))%>%
+  dcast(variable~Species,value.var="Text")
+```
+
+
+好啦今天的部分就到此結束拉
+不知道下一篇什麼時候才會誕生........

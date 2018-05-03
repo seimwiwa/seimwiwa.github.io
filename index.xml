@@ -6,10 +6,24 @@
     <description>Recent content on 魚缸</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ch</language>
-    <lastBuildDate>Sat, 13 Jan 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 03 May 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>R 教學 - CH05 敘述性統計指標</title>
+      <link>/post/r-%E6%95%99%E5%AD%B8-ch05-%E6%95%98%E8%BF%B0%E6%80%A7%E7%B5%B1%E8%A8%88%E6%8C%87%E6%A8%99/</link>
+      <pubDate>Thu, 03 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/r-%E6%95%99%E5%AD%B8-ch05-%E6%95%98%E8%BF%B0%E6%80%A7%E7%B5%B1%E8%A8%88%E6%8C%87%E6%A8%99/</guid>
+      <description>敘述性統計指標很久沒更新了……… 對……
+在這個篇章會講幾項常用的統計指標，其中包含：平均值、變異數、標準差、最小值、最大值、百分位值、95%區間數值
+如果你想看各個指標的計算方法或是意義，請Google 這邊僅會介紹怎樣操作
+此外，還是會帶一點資料處理
+統計指標這裡用內建的iris資料作為範例
+summary(iris)## Sepal.Length Sepal.Width Petal.Length Petal.Width ## Min. :4.300 Min. :2.000 Min. :1.000 Min. :0.100 ## 1st Qu.:5.100 1st Qu.:2.800 1st Qu.:1.600 1st Qu.:0.300 ## Median :5.800 Median :3.000 Median :4.350 Median :1.300 ## Mean :5.843 Mean :3.057 Mean :3.758 Mean :1.199 ## 3rd Qu.:6.400 3rd Qu.:3.300 3rd Qu.:5.100 3rd Qu.:1.800 ## Max. :7.900 Max. :4.400 Max. :6.900 Max. :2.500 ## Species ## setosa :50 ## versicolor:50 ## virginica :50 ## ## ## 其中，我們先使用Sepal.</description>
+    </item>
     
     <item>
       <title>關於魚缸</title>

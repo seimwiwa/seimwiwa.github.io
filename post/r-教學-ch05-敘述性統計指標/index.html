@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R 教學 - CH05 敘述性統計指標</title>
+<meta name="description" content="try to work this out.......">
+<meta name="generator" content="Hugo 0.32.2" />
+<meta property="og:title" content="R 教學 - CH05 敘述性統計指標" />
+<meta property="og:description" content="敘述性統計指標很久沒更新了……… 對……
+在這個篇章會講幾項常用的統計指標，其中包含：平均值、變異數、標準差、最小值、最大值、百分位值、95%區間數值
+如果你想看各個指標的計算方法或是意義，請Google 這邊僅會介紹怎樣操作
+此外，還是會帶一點資料處理
+統計指標這裡用內建的iris資料作為範例
+summary(iris)## Sepal.Length Sepal.Width Petal.Length Petal.Width ## Min. :4.300 Min. :2.000 Min. :1.000 Min. :0.100 ## 1st Qu.:5.100 1st Qu.:2.800 1st Qu.:1.600 1st Qu.:0.300 ## Median :5.800 Median :3.000 Median :4.350 Median :1.300 ## Mean :5.843 Mean :3.057 Mean :3.758 Mean :1.199 ## 3rd Qu.:6.400 3rd Qu.:3.300 3rd Qu.:5.100 3rd Qu.:1.800 ## Max. :7.900 Max. :4.400 Max. :6.900 Max. :2.500 ## Species ## setosa :50 ## versicolor:50 ## virginica :50 ## ## ## 其中，我們先使用Sepal." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/post/r-%E6%95%99%E5%AD%B8-ch05-%E6%95%98%E8%BF%B0%E6%80%A7%E7%B5%B1%E8%A8%88%E6%8C%87%E6%A8%99/" />
+
+
+
+<meta property="article:published_time" content="2018-05-03T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2018-05-03T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+<link rel="dns-prefetch" href="//fonts.gstatic.com" />
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700" type="text/css" media="all" />
+<link rel="stylesheet" href="/css/style.css" type="text/css" media="all" />
+<script type="text/javascript" src="/js/scripts.js"></script>
+<link rel="shortcut icon" href="/favicon.ico">
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-112058330-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body class="body body-right-sidebar mobile" itemscope="itemscope" itemtype="http://schema.org/WebPage">
+	<div class="container container-outer">
+		<header class="header" itemscope="itemscope" itemtype="http://schema.org/WPHeader">
+			<div class="container container-inner clearfix">
+				<div class="logo" role="banner" itemscope="itemscope" itemtype="http://schema.org/Brand">
+					<a class="logo__link" href="/" title="魚缸" rel="home">
+						<h1 class="logo__title">魚缸</h1>
+						<h2 class="logo__tagline">fish site</h2>
+					</a>
+				</div>
+			</div>
+			
+<nav class="menu" itemscope="itemscope" itemtype="http://schema.org/SiteNavigationElement">
+	<ul class="menu__list">
+		<li class="menu__item"><a class="menu__link" href="/about/">關於魚缸</a></li>
+	</ul>
+</nav>
+
+		</header>
+		<div class="wrapper clearfix">
+
+<main class="main-content content" role="main" itemprop="mainContentOfPage">
+	<article class="post">
+		<header class="post__header clearfix">
+			<h1 class="post__title">R 教學 - CH05 敘述性統計指標</h1>
+			<p class="post__meta meta">
+				<svg class="icon icon-time" height="14" viewBox="0 0 16 16" width="14" xmlns="http://www.w3.org/2000/svg"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+				<time class="post__meta-date" datetime="2018-05-03T00:00:00">May 03, 2018</time>
+				<span class="post__meta-categories meta-categories">
+					<svg class="icon icon-category" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+					<a class="meta-categories__link" href="/categories/r-tutorial" rel="category">R tutorial</a></span>
+			</p>
+		</header>
+		<div class="post__content clearfix">
+			<div class="section level1">
+<h1>敘述性統計指標</h1>
+<hr />
+<p>很久沒更新了……… 對……</p>
+<p>在這個篇章會講幾項常用的統計指標，其中包含：平均值、變異數、標準差、最小值、最大值、百分位值、95%區間數值</p>
+<p>如果你想看各個指標的計算方法或是意義，請Google 這邊僅會介紹怎樣操作</p>
+<p>此外，還是會帶一點資料處理</p>
+<div class="section level2">
+<h2>統計指標</h2>
+<p>這裡用內建的iris資料作為範例</p>
+<pre class="r"><code>summary(iris)</code></pre>
+<pre><code>##   Sepal.Length    Sepal.Width     Petal.Length    Petal.Width   
+##  Min.   :4.300   Min.   :2.000   Min.   :1.000   Min.   :0.100  
+##  1st Qu.:5.100   1st Qu.:2.800   1st Qu.:1.600   1st Qu.:0.300  
+##  Median :5.800   Median :3.000   Median :4.350   Median :1.300  
+##  Mean   :5.843   Mean   :3.057   Mean   :3.758   Mean   :1.199  
+##  3rd Qu.:6.400   3rd Qu.:3.300   3rd Qu.:5.100   3rd Qu.:1.800  
+##  Max.   :7.900   Max.   :4.400   Max.   :6.900   Max.   :2.500  
+##        Species  
+##  setosa    :50  
+##  versicolor:50  
+##  virginica :50  
+##                 
+##                 
+## </code></pre>
+<p>其中，我們先使用<strong>Sepal.Length</strong>作為範例。</p>
+<table>
+<thead>
+<tr class="header">
+<th>統計指標</th>
+<th>R中的函數</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>平均值</td>
+<td>mean</td>
+</tr>
+<tr class="even">
+<td>變異數</td>
+<td>var</td>
+</tr>
+<tr class="odd">
+<td>標準差</td>
+<td>sd</td>
+</tr>
+<tr class="even">
+<td>最小值</td>
+<td>min</td>
+</tr>
+<tr class="odd">
+<td>最大值</td>
+<td>max</td>
+</tr>
+<tr class="even">
+<td>百分位值</td>
+<td>quantile</td>
+</tr>
+</tbody>
+</table>
+<p><strong>95%區間數值放在後面講</strong></p>
+<p>知道上面這些之後，可以從平均值開始嘗試</p>
+<pre class="r"><code>#平均值
+mean(iris$Sepal.Length)</code></pre>
+<pre><code>## [1] 5.843333</code></pre>
+<pre class="r"><code>#變異數
+var(iris$Sepal.Length)</code></pre>
+<pre><code>## [1] 0.6856935</code></pre>
+<pre class="r"><code>#標準差
+sd(iris$Sepal.Length)</code></pre>
+<pre><code>## [1] 0.8280661</code></pre>
+<pre class="r"><code>#最小值
+min(iris$Sepal.Length)</code></pre>
+<pre><code>## [1] 4.3</code></pre>
+<pre class="r"><code>#最大值
+max(iris$Sepal.Length)</code></pre>
+<pre><code>## [1] 7.9</code></pre>
+<pre class="r"><code>#百分位值
+quantile(iris$Sepal.Length)</code></pre>
+<pre><code>##   0%  25%  50%  75% 100% 
+##  4.3  5.1  5.8  6.4  7.9</code></pre>
+<p>此處有一點可以注意，如果一串數列其中帶有NA值，經由上述函數計算後會發生什麼</p>
+<p>這邊用c函數在iris$Sepal.Length前面添加一筆NA數值，並把心數列稱作a</p>
+<pre class="r"><code>a=c(NA,iris$Sepal.Length)
+
+mean(a)</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code>var(a)</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code>sd(a)</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code>min(a)</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code>max(a)</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code>quantile(a)</code></pre>
+<pre><code>## Error in quantile.default(a): missing values and NaN&#39;s not allowed if &#39;na.rm&#39; is FALSE</code></pre>
+<p>很悲慘吧，因此在處理這些指標時，必須在函數中加入<strong>na.rm=TRUE</strong>的指令，用以排除NA值</p>
+<pre><code>提示：
+mean、var、sd、min、max、quantile中可以添加na.rm=TRUE排除遺失值
+
+na.rm 不指定時默認為na.rm=FALSE，表示不排除遺失值，如果數列中包含NA，結果將會錯誤</code></pre>
+<p>再嘗試一遍，並添加na.rm=TRUE</p>
+<pre class="r"><code>mean(a,na.rm=TRUE)</code></pre>
+<pre><code>## [1] 5.843333</code></pre>
+<pre class="r"><code>var(a,na.rm=TRUE)</code></pre>
+<pre><code>## [1] 0.6856935</code></pre>
+<pre class="r"><code>sd(a,na.rm=TRUE)</code></pre>
+<pre><code>## [1] 0.8280661</code></pre>
+<pre class="r"><code>min(a,na.rm=TRUE)</code></pre>
+<pre><code>## [1] 4.3</code></pre>
+<pre class="r"><code>max(a,na.rm=TRUE)</code></pre>
+<pre><code>## [1] 7.9</code></pre>
+<pre class="r"><code>quantile(a,na.rm=TRUE)</code></pre>
+<pre><code>##   0%  25%  50%  75% 100% 
+##  4.3  5.1  5.8  6.4  7.9</code></pre>
+<p>在上面的講解中，應該有發現quantile函數的輸出是包含0、25、50、75、100%的各項數值 如果今天只需要特定的幾個百分位，應該怎麼操作呢?</p>
+<pre><code>提示：
+quantile函數可以指定要輸出的百分位值
+
+probs 默認為seq(0, 1, 0.25)，表示從0到1，每隔0.25取一個數值，也就是0、25、50、75、100%
+na.rm 不指定時默認為na.rm=FALSE，表示不排除遺失值，如果數列中包含NA，結果將會錯誤
+names 是否要輸出百分位名稱，默認為names=TRUE表示要輸出百分位名稱</code></pre>
+<p>所以，如果指定要輸出iris$Sepal.Length的第一百分位值稱作q1，第三百分位為q3 再讓兩者相減，則應該這麼做</p>
+<pre class="r"><code>q1=quantile(iris$Sepal.Length,probs = c(0.25),names = FALSE)
+q3=quantile(iris$Sepal.Length,probs = c(0.75),names = FALSE)
+
+
+q1</code></pre>
+<pre><code>## [1] 5.1</code></pre>
+<pre class="r"><code>q3</code></pre>
+<pre><code>## [1] 6.4</code></pre>
+<pre class="r"><code>q3-q1</code></pre>
+<pre><code>## [1] 1.3</code></pre>
+<p>又，今天如果要輸出20%、40%、60%、80% 則可以這麼處理</p>
+<pre class="r"><code>quantile(iris$Sepal.Length,probs = c(.2,.4,.6,.8),names = FALSE)</code></pre>
+<pre><code>## [1] 5.00 5.60 6.10 6.52</code></pre>
+<p>以上大概就是基本統計指標的介紹拉</p>
+</div>
+<div class="section level2">
+<h2>大量的輸出統計指標</h2>
+<p>接下來我們可以從iris出發，試想</p>
+<p>在iris資料中有5筆資料，包含Sepal.Length、Sepal.Width、Petal.Length、Petal.Width、Species</p>
+<p>同時內部的各個資料中，屬於數值資料者有4筆</p>
+<p>如下</p>
+<pre class="r"><code>str(iris)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    150 obs. of  5 variables:
+##  $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
+##  $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
+##  $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
+##  $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
+##  $ Species     : Factor w/ 3 levels &quot;setosa&quot;,&quot;versicolor&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<p>如果要針對四個欄位做四次mean、sd、min…..不是會累死嗎</p>
+<p>所以，延續上一次所提到的資料整理，我們可以首先把iris資料中的Species忽視掉</p>
+<p>將剩餘的幾個欄位轉換成這種形式</p>
+<pre><code>##       variable value
+## 1 Sepal.Length   5.1
+## 2 Sepal.Length   4.9
+## 3 Sepal.Length   4.7
+## 4 Sepal.Length   4.6
+## 5 Sepal.Length   5.0
+## 6 Sepal.Length   5.4</code></pre>
+<p>所以我們首先輸入兩個套件data.table與dplyr</p>
+<p>利用dplyr中select指令剔除Species欄位，而後用data.table的melt轉置，用head指定輸出前20項</p>
+<pre class="r"><code>iris%&gt;%
+  select(-Species)%&gt;%
+  melt()%&gt;%
+  head(n=20)</code></pre>
+<pre><code>##        variable value
+## 1  Sepal.Length   5.1
+## 2  Sepal.Length   4.9
+## 3  Sepal.Length   4.7
+## 4  Sepal.Length   4.6
+## 5  Sepal.Length   5.0
+## 6  Sepal.Length   5.4
+## 7  Sepal.Length   4.6
+## 8  Sepal.Length   5.0
+## 9  Sepal.Length   4.4
+## 10 Sepal.Length   4.9
+## 11 Sepal.Length   5.4
+## 12 Sepal.Length   4.8
+## 13 Sepal.Length   4.8
+## 14 Sepal.Length   4.3
+## 15 Sepal.Length   5.8
+## 16 Sepal.Length   5.7
+## 17 Sepal.Length   5.4
+## 18 Sepal.Length   5.1
+## 19 Sepal.Length   5.7
+## 20 Sepal.Length   5.1</code></pre>
+<p>這裡可以看到，資料被轉換成variable跟value兩欄位</p>
+<p>接著可以另用dplyr的group_by指定依據variable識別不同欄位進行summarise</p>
+<p>而要summarise的內容就是前面說的敘述性統計指標拉</p>
+<p>最後再用mutate來計算上下95%CI的數值拉</p>
+<pre class="r"><code>iris%&gt;%
+  select(-Species)%&gt;%
+  melt()%&gt;%
+  group_by(variable)%&gt;%
+  summarise(N=n(),
+            Missing=value%&gt;%is.na%&gt;%sum,
+            Mean=value%&gt;%mean(na.rm=T),
+            SD=value%&gt;%mean(na.rm=T),
+            Minimim=value%&gt;%mean(na.rm=T),
+            Q1=value%&gt;%mean(na.rm=T),
+            Q2=value%&gt;%mean(na.rm=T),
+            Q3=value%&gt;%mean(na.rm=T),
+            Maximum=value%&gt;%mean(na.rm=T))%&gt;%
+  mutate(SE=SD/sqrt(N),
+         LowerCI=Mean-qt(1-(0.05/2),N-1)*SE,
+         UpperCI=Mean+qt(1-(0.05/2),N-1)*SE)</code></pre>
+<pre><code>## # A tibble: 4 x 13
+##   variable         N Missing  Mean    SD Minimim    Q1    Q2    Q3 Maximum
+##   &lt;fct&gt;        &lt;int&gt;   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Sepal.Length   150       0  5.84  5.84    5.84  5.84  5.84  5.84    5.84
+## 2 Sepal.Width    150       0  3.06  3.06    3.06  3.06  3.06  3.06    3.06
+## 3 Petal.Length   150       0  3.76  3.76    3.76  3.76  3.76  3.76    3.76
+## 4 Petal.Width    150       0  1.20  1.20    1.20  1.20  1.20  1.20    1.20
+## # ... with 3 more variables: SE &lt;dbl&gt;, LowerCI &lt;dbl&gt;, UpperCI &lt;dbl&gt;</code></pre>
+<p>也可以讓表格中只呈現依不同column和類別(這裡用Species代表)的Mean ( Q1 - Q3 )數值</p>
+<p>令iris.sep是依據Species轉置的數據 而iris.all則是直接轉置全部數值的數據，同時用mutate新增一欄Species，表示為All代表是所有數值的種類</p>
+<p>再以rbind將兩者合併，用group_by還有summarise來取得敘述性統計指標</p>
+<p>把mean、q1、q3用paste形成Text欄位 再以dcast指定variable對上Species的轉至資料，在中以Text之文字填入</p>
+<pre class="r"><code>iris.sep=iris%&gt;%
+  melt(id.vars=&quot;Species&quot;)
+
+iris.all=iris%&gt;%
+  select(-Species)%&gt;%
+  melt()%&gt;%
+  mutate(Species=&quot;All&quot;)
+
+iris.all%&gt;%
+  rbind(.,iris.sep)%&gt;%
+  group_by(Species,variable)%&gt;%
+  summarise(Mean=value%&gt;%mean(na.rm=T)%&gt;%round(.,2),
+            Q1=value%&gt;%mean(na.rm=T)%&gt;%round(.,2),
+            Q3=value%&gt;%mean(na.rm=T)%&gt;%round(.,2),
+            Text=paste(Mean,&quot;(&quot;,Q1,&quot;-&quot;,Q3,&quot;)&quot;))%&gt;%
+  dcast(variable~Species,value.var=&quot;Text&quot;)</code></pre>
+<pre><code>##       variable                  All               setosa
+## 1 Sepal.Length 5.84 ( 5.84 - 5.84 ) 5.01 ( 5.01 - 5.01 )
+## 2  Sepal.Width 3.06 ( 3.06 - 3.06 ) 3.43 ( 3.43 - 3.43 )
+## 3 Petal.Length 3.76 ( 3.76 - 3.76 ) 1.46 ( 1.46 - 1.46 )
+## 4  Petal.Width    1.2 ( 1.2 - 1.2 ) 0.25 ( 0.25 - 0.25 )
+##             versicolor            virginica
+## 1 5.94 ( 5.94 - 5.94 ) 6.59 ( 6.59 - 6.59 )
+## 2 2.77 ( 2.77 - 2.77 ) 2.97 ( 2.97 - 2.97 )
+## 3 4.26 ( 4.26 - 4.26 ) 5.55 ( 5.55 - 5.55 )
+## 4 1.33 ( 1.33 - 1.33 ) 2.03 ( 2.03 - 2.03 )</code></pre>
+<p>好啦今天的部分就到此結束拉 不知道下一篇什麼時候才會誕生……..</p>
+</div>
+</div>
+
+		</div>
+		
+<div class="post__tags tags clearfix">
+	<svg class="icon icon-tag" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="m4.73135 3.3795002q0-.5597-.39604-.9557-.39604-.3961-.95577-.3961-.55974 0-.95578.3961-.39604.396-.39604.9557 0 .5598.39604.9558.39604.3961.95578.3961.55973 0 .95577-.3961.39604-.396.39604-.9558zm11.26865 6.0832q0 .5596998-.39076.9504998l-5.18548 5.196q-.41188.3908-.9610504.3908-.55974 0-.9505-.3908l-7.5511496-7.5616998q-.40132-.3907-.68119-1.0666-.27987-.6759-.27987-1.2357v-4.3934q0-.54920004.40132-.95050004.40132-.4013.9505-.4013h4.39339q.55974 0 1.23565.2799.67591.2798 1.07723.6812l7.55115 7.54060004q.39076.4118.39076.961z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item"><a class="tags__link" href="/tags/data.table/" rel="tag">data.table</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/dplyr/" rel="tag">dplyr</a></li>
+		<li class="tags__item"><a class="tags__link" href="/tags/descriptive-statistics/" rel="tag">Descriptive Statistics</a></li>
+	</ul>
+</div>
+
+	</article>
+	
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="fish ko avatar" src="/img/inuyasha%20.JPG" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">About fish ko</span>
+	</div>
+	<div class="authorbox__description">
+		try to work this out.......
+	</div>
+</div>
+	
+<nav class="post-nav row clearfix" itemscope="itemscope" itemtype="http://schema.org/SiteNavigationElement">
+	<div class="post-nav__item post-nav__item--prev col-1-2">
+		<a class="post-nav__link" href="/post/2018-01-07-health.risk.mental.issue.weather/" rel="prev"><span class="post-nav__caption">«Previous</span><p class="post-nav__post-title">健康風險-天氣與精神異常</p></a>
+	</div>
+</nav>
+
+	
+<div class="comments">
+	<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "seimwiwa" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+<aside class="sidebar" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">
+	
+<div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="//google.com/search">
+		<label>
+			<span class="screen-reader-text">Search for:</span>
+			<input class="widget-search__field" type="search" placeholder="SEARCH..." value="" name="q">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+	
+<div class="widget-recent widget">
+	<h4 class="widget__title">Recent Posts</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch05-%E6%95%98%E8%BF%B0%E6%80%A7%E7%B5%B1%E8%A8%88%E6%8C%87%E6%A8%99/">R 教學 - CH05 敘述性統計指標</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/2018-01-07-health.risk.mental.issue.weather/">健康風險-天氣與精神異常</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/emsps/">緊急醫療救護服務預測系統</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch04-%E8%B3%87%E6%96%99%E8%99%95%E7%90%86/">R 教學 - CH04 資料處理</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch03-%E8%BF%B4%E5%9C%88/">R 教學 - CH03 迴圈</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch02-%E5%AD%98%E5%8F%96%E8%B3%87%E6%96%99/">R 教學 - CH02 存取資料</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch01-%E5%9F%BA%E6%9C%AC%E8%AA%9E%E6%B3%95/">R 教學 - CH01 基本語法</a></li>
+			<li class="widget__item"><a class="widget__link" href="/post/r-%E6%95%99%E5%AD%B8-ch00-%E5%BC%95%E8%A8%80/">R 教學 - CH00 引言</a></li>
+		</ul>
+	</div>
+</div>
+
+	
+<div class="widget-categories widget">
+	<h4 class="widget__title">Categories</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/categories/r-tutorial">R-Tutorial</a></li>
+			<li class="widget__item"><a class="widget__link" href="/categories/reserch">Reserch</a></li>
+		</ul>
+	</div>
+</div>
+	
+
+	
+<div class="widget-taglist widget">
+	<h4 class="widget__title">Tags</h4>
+	<div class="widget__content">
+		<a class="widget__link widget__link--taglist" href="/tags/apply" title="apply">apply</a>
+		<a class="widget__link widget__link--taglist" href="/tags/data.table" title="data.table">data.table</a>
+		<a class="widget__link widget__link--taglist" href="/tags/descriptive-statistics" title="descriptive-statistics">descriptive-statistics</a>
+		<a class="widget__link widget__link--taglist" href="/tags/dlnm" title="dlnm">dlnm</a>
+		<a class="widget__link widget__link--taglist" href="/tags/dplyr" title="dplyr">dplyr</a>
+		<a class="widget__link widget__link--taglist" href="/tags/emergency-medical-service" title="emergency-medical-service">emergency-medical-service</a>
+		<a class="widget__link widget__link--taglist" href="/tags/ems" title="ems">ems</a>
+		<a class="widget__link widget__link--taglist" href="/tags/environment" title="environment">environment</a>
+		<a class="widget__link widget__link--taglist" href="/tags/for" title="for">for</a>
+		<a class="widget__link widget__link--taglist" href="/tags/health-risk-assessment" title="health-risk-assessment">health-risk-assessment</a>
+		<a class="widget__link widget__link--taglist" href="/tags/introduction" title="introduction">introduction</a>
+		<a class="widget__link widget__link--taglist" href="/tags/load" title="load">load</a>
+		<a class="widget__link widget__link--taglist" href="/tags/mental-issue" title="mental-issue">mental-issue</a>
+		<a class="widget__link widget__link--taglist" href="/tags/r" title="r">r</a>
+		<a class="widget__link widget__link--taglist" href="/tags/read" title="read">read</a>
+		<a class="widget__link widget__link--taglist" href="/tags/reserch" title="reserch">reserch</a>
+		<a class="widget__link widget__link--taglist" href="/tags/reshape" title="reshape">reshape</a>
+		<a class="widget__link widget__link--taglist" href="/tags/reshape2" title="reshape2">reshape2</a>
+		<a class="widget__link widget__link--taglist" href="/tags/save" title="save">save</a>
+		<a class="widget__link widget__link--taglist" href="/tags/throughput" title="throughput">throughput</a>
+		<a class="widget__link widget__link--taglist" href="/tags/tutorial" title="tutorial">tutorial</a>
+		<a class="widget__link widget__link--taglist" href="/tags/weather-effect" title="weather-effect">weather-effect</a>
+		<a class="widget__link widget__link--taglist" href="/tags/write" title="write">write</a>
+		<a class="widget__link widget__link--taglist" href="/tags/xgboost" title="xgboost">xgboost</a>
+		<a class="widget__link widget__link--taglist" href="/tags/xls" title="xls">xls</a>
+		<a class="widget__link widget__link--taglist" href="/tags/xlsx" title="xlsx">xlsx</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%81%a5%e5%ba%b7%e9%a2%a8%e9%9a%aa%e8%a9%95%e4%bc%b0" title="健康風險評估">健康風險評估</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%84%b2%e5%ad%98%e5%9e%8b%e6%85%8b" title="儲存型態">儲存型態</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%a4%a9%e6%b0%a3" title="天氣">天氣</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e5%ad%98%e5%8f%96%e8%b3%87%e6%96%99" title="存取資料">存取資料</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e6%9f%a5%e7%9c%8b%e7%89%a9%e4%bb%b6" title="查看物件">查看物件</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e7%89%a9%e4%bb%b6%e5%ae%9a%e7%be%a9" title="物件定義">物件定義</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e7%b2%be%e7%a5%9e%e7%95%b0%e5%b8%b8" title="精神異常">精神異常</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e7%b7%8a%e6%80%a5%e9%86%ab%e7%99%82%e6%95%91%e8%ad%b7%e6%9c%8d%e5%8b%99" title="緊急醫療救護服務">緊急醫療救護服務</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e8%b3%87%e6%96%99%e7%89%a9%e4%bb%b6" title="資料物件">資料物件</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e8%bf%b4%e5%9c%88" title="迴圈">迴圈</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e9%81%8b%e7%ae%97" title="運算">運算</a>
+		<a class="widget__link widget__link--taglist" href="/tags/%e9%9d%9e%e7%b7%9a%e6%80%a7%e9%81%9e%e5%bb%b6%e6%a8%a1%e5%9e%8b" title="非線性遞延模型">非線性遞延模型</a>
+	</div>
+</div>
+</aside>
+
+	</div>
+		<footer class="footer" itemscope="itemscope" itemtype="http://schema.org/WPFooter">
+			<div class="container container-inner">
+				<p class="footer__copyright">&copy; 2018 魚缸. <span class="footer__copyright-credits">Generated with <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad theme</a>.</span></p>
+			</div>
+		</footer>
+	</div>
+
+<script>
+	var navigation = responsiveNav(".menu", {
+		navClass: "menu--collapse",
+	});
+</script>
+</body>
+</html>

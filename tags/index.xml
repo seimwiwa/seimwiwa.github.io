@@ -23,9 +23,18 @@
     <item>
       <title>Data.table</title>
       <link>/tags/data.table/</link>
-      <pubDate>Thu, 31 Aug 2017 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 03 May 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/data.table/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Descriptive Statistics</title>
+      <link>/tags/descriptive-statistics/</link>
+      <pubDate>Thu, 03 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/descriptive-statistics/</guid>
       <description></description>
     </item>
     
@@ -41,7 +50,7 @@
     <item>
       <title>Dplyr</title>
       <link>/tags/dplyr/</link>
-      <pubDate>Thu, 31 Aug 2017 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 03 May 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/dplyr/</guid>
       <description></description>
